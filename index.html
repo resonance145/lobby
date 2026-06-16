@@ -547,7 +547,7 @@
         logArea.scrollTop = logArea.scrollHeight;
     }
 
-    let healTargetCount = 0;
+let healTargetCount = 0;
     function setHealTarget(count, btnElement) {
         healTargetCount = count;
         document.querySelectorAll('.heal-controls .btn-outline, #view-bar .btn-outline').forEach(b => b.classList.remove('selected'));
@@ -557,7 +557,17 @@
         document.getElementById('heal-input-section').style.display = 'block';
         inputsDiv.innerHTML = '';
         
-        let typeName = count === 1 ? "대접 (20 + 1d10)" : `생명의 물방울 (${count}인)`;
+        let typeName = "";
+        if (count === 1) {
+            typeName = "대접 (20 + 1d10)";
+        } else if (count === 3) {
+            typeName = "생명의 물방울 : 3명 (12 + 1d8)";
+        } else if (count === 4) {
+            typeName = "생명의 물방울 : 4명 (10 + 1d6)";
+        } else if (count === 5) {
+            typeName = "생명의 물방울 : 5명 (8 + 1d5)";
+        }
+
         document.getElementById('heal-desc').innerText = `선택된 스킬: ${typeName}`;
 
         for (let i = 1; i <= count; i++) {
