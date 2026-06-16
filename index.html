@@ -140,10 +140,10 @@
 
         <div id="tab-random" class="tab-content">
             <div style="text-align: center; padding: 30px;">
-                <h3 style="color: var(--gold-light); font-size: 28px; font-family: var(--font-serif);">무작위 아이템 탐색</h3>
+                <h3 style="color: var(--gold-light); font-size: 28px; font-family: var(--font-serif);">무작위 아이템 뽑기</h3>
                 <p style="color: var(--text-sub);">100 G 소모</p>
                 <div id="gacha-result" style="font-size: 24px; font-weight: bold; margin: 30px 0; min-height: 80px; display: flex; flex-direction: column; justify-content: center; align-items: center;">결과가 이곳에 표시됩니다.</div>
-                <button class="btn-primary" onclick="rollGacha(100)" style="width: auto; padding: 15px 50px; border-radius: 30px; font-size: 18px;">탐색 시작</button>
+                <button class="btn-primary" onclick="rollGacha(100)" style="width: auto; padding: 15px 50px; border-radius: 30px; font-size: 18px;">가챠 시작</button>
                 <div id="gacha-log" class="log-box" style="overflow-y: auto; text-align: left; white-space: pre-wrap;" onclick="copyLog(this)" title="클릭하면 복사됩니다."></div>
             </div>
         </div>
@@ -152,20 +152,20 @@
     <div id="view-bar" class="view">
         <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--gold-dark); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
             <h3 style="color: var(--gold-light); font-size: 26px; margin-top: 0; font-family: var(--font-serif);">휴식과 회복</h3>
-            <p style="color: var(--gold-light);">※ 굴린 주사위 결과는 대상자의 구글 시트 체력에 즉시 자동 반영됩니다.</p>
+            <p style="color: var(--gold-light);">※ 회복 결과는 대상자의 구글 시트 체력에 자동 반영됩니다.</p>
         </div>
         
         <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-            <button class="btn-outline" onclick="setHealTarget(1, this)">1명 (대접)</button>
-            <button class="btn-outline" onclick="setHealTarget(3, this)">3명 (다중)</button>
-            <button class="btn-outline" onclick="setHealTarget(4, this)">4명 (다중)</button>
-            <button class="btn-outline" onclick="setHealTarget(5, this)">5명 (다중)</button>
+            <button class="btn-outline" onclick="setHealTarget(1, this)">1명</button>
+            <button class="btn-outline" onclick="setHealTarget(3, this)">3명</button>
+            <button class="btn-outline" onclick="setHealTarget(4, this)">4명</button>
+            <button class="btn-outline" onclick="setHealTarget(5, this)">5명</button>
         </div>
 
         <div id="heal-input-section" style="display: none; background: rgba(255,255,255,0.03); padding: 20px; border-radius: 8px;">
             <p id="heal-desc" style="color: var(--gold-main); font-size: 15px; margin-top:0; font-weight:bold;"></p>
             <div id="heal-inputs" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-bottom: 20px;"></div>
-            <button class="btn-primary" style="width: auto;" onclick="rollHeal()">회복 주사위 굴리기</button>
+            <button class="btn-primary" style="width: auto;" onclick="rollHeal()">회복하기</button>
         </div>
 
         <textarea id="heal-log" class="log-box" readonly onclick="copyLog(this)" title="클릭하면 복사됩니다." placeholder="[시스템] 회복 결과가 누적됩니다. 클릭 시 자동 복사됩니다."></textarea>
@@ -182,10 +182,7 @@
 </div>
 
 <script>
-    // ========================================================
-    // ⚠️ 아래 큰따옴표("") 내부에 본인의 구글 앱스 스크립트 '웹 앱 URL'을 넣어주세요!
     const API_URL = "https://script.google.com/macros/s/AKfycbzEO9cbWDMh6I1cf85nWjOn1psqYohENUWihxbmVGs26yTeSliKYHHo7ljJl0aW3D4L/exec";
-    // ========================================================
     
     let playerData = null;
     let systemData = null; 
@@ -196,7 +193,7 @@
         let textToCopy = element.value || element.innerText; 
         if (!textToCopy) return;
         navigator.clipboard.writeText(textToCopy).then(() => {
-            alert("📋 내용이 클립보드에 복사되었습니다!");
+            alert("복사되었습니다.");
         }).catch(err => { alert("복사에 실패했습니다."); });
     }
 
@@ -236,7 +233,7 @@
             const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
             return await response.json();
         } catch (error) {
-            alert(`⛔ 통신 실패!\n배포 설정을 확인하세요.\n(상세 에러: ${error.message})`);
+            alert(`통신 실패!\n배포 설정을 확인하세요.\n(상세 에러: ${error.message})`);
             return null;
         }
     }
@@ -246,7 +243,7 @@
             const pw = document.getElementById('login-pw').value.trim();
             if(!pw) return alert("비밀번호를 입력해주세요.");
 
-            if(!API_URL || API_URL === "여기에_웹_앱_주소를_붙여넣으세요" || API_URL === "") {
+            if(!API_URL || API_URL === "웹_앱_주소" || API_URL === "") {
                 return alert("⚠️ [개발자 오류]\nHTML 내부 상단의 API_URL 변수에 웹 앱 URL 주소가 입력되지 않았습니다!");
             }
 
@@ -264,7 +261,6 @@
                 buildNPCUI();
                 buildFixedShopUI();
                 
-                // 로그인 시 공지사항 UI도 함께 빌드합니다.
                 buildNoticeUI();
 
                 nav('lobby');
@@ -278,9 +274,6 @@
         }
     }
 
-// -------------------------------------------------------------------
-    // 공지사항 렌더링 로직 (제목 색상 일치 버전)
-    // -------------------------------------------------------------------
     function buildNoticeUI() {
         const list = document.getElementById('notice-list');
         list.innerHTML = '';
@@ -300,7 +293,6 @@
                 dateStr = dateStr.split('T')[0].replace(/-/g, '.'); 
             }
 
-            // ⭐ 테두리와 제목 텍스트에 동일하게 적용될 테마 색상 설정
             let themeColor = 'var(--gold-main)'; // 금색 (기본값: 안내)
 
             if (category.includes('업데이트')) {
@@ -309,7 +301,6 @@
                 themeColor = '#ff5555';         // 붉은색
             }
 
-            // h4 태그의 글자색(color)을 테마 색상(themeColor)으로 통일했습니다.
             list.innerHTML += `
                 <div style="background: rgba(255,255,255,0.03); border-left: 4px solid ${themeColor}; padding: 15px; border-radius: 4px;">
                     <h4 style="color: ${themeColor}; margin: 0 0 10px 0; font-size: 18px;">[${category}] ${title}</h4>
@@ -351,9 +342,6 @@
         });
     }
 
-    // -------------------------------------------------------------------
-    // 아이템 사용 모달 스크립트
-    // -------------------------------------------------------------------
     let currentUseIndex = -1;
     let currentUseItem = "";
 
@@ -378,9 +366,6 @@
         }
     };
 
-    // -------------------------------------------------------------------
-    // 아이템 양도 모달 스크립트
-    // -------------------------------------------------------------------
     let currentTransferIndex = -1;
     let currentTransferItem = "";
 
@@ -421,7 +406,7 @@
         showLoading(false);
 
         if (res && res.success) {
-            alert(`✅ 성공!\n[${itemToTransfer}] 아이템을 ${targetName}님에게 안전하게 양도했습니다.`);
+            alert(`성공.\n[${itemToTransfer}] 아이템을 ${targetName} 님에게 안전하게 양도했습니다.`);
             buildInventoryUI(); 
         } else {
             alert("양도 실패: " + (res ? res.msg : "서버 오류"));
@@ -429,9 +414,6 @@
         }
     };
 
-    // -------------------------------------------------------------------
-    // 로비, 상점, 회복 로직
-    // -------------------------------------------------------------------
     function buildNPCUI() {
         const listContainer = document.getElementById('npc-list');
         listContainer.innerHTML = '';
@@ -509,7 +491,7 @@
             }
             return true; 
         } 
-        else { alert("시트 동기화 실패!"); return false; }
+        else { alert("시트 동기화 실패"); return false; }
     }
 
     async function buyItem(name, price, effect, isLimited, currentStock) {
