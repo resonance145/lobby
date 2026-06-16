@@ -512,7 +512,10 @@
             }
             return true; 
         } 
-        else { alert("시트 동기화 실패!"); return false; }
+        else { 
+            alert("시트 반영 실패!\n(사유: " + (res ? res.msg : "서버 응답 없음") + ")"); 
+            return false; 
+        }
     }
 
     async function buyItem(name, price, effect, isLimited, currentStock) {
@@ -647,15 +650,12 @@
         playerData.coins -= cost;
         updateTopBar();
         
-        let pulledItems = [];
-        let decrements = {}; 
+        let pulledItems = []; let decrements = {}; 
 
         for(let i=0; i<times; i++) {
             let pulled = pullOneItem();
             if(!pulled) break; 
-            
             pulledItems.push({...pulled});
-            
             let isLimited = (pulled['개수 제한'] === 'Y' || pulled['개수제한'] === 'Y');
             if(isLimited) {
                 pulled['개수'] = Number(pulled['개수']) - 1; 
@@ -665,18 +665,22 @@
         
         if(pulledItems.length === 0) {
             alert("시스템 오류로 아이템을 뽑지 못했습니다.");
-            playerData.coins += cost;
-            updateTopBar();
-            return;
+            playerData.coins += cost; updateTopBar(); return;
         }
+
+        const getSafeVal = (obj, keyword) => {
+            let k = Object.keys(obj).find(key => key.includes(keyword));
+            return k && obj[k] ? obj[k] : '';
+        };
 
         let bestItem = pulledItems[0];
         for (let item of pulledItems) {
-            let cRarity = Number(item['희귀도']) || 999;
-            let bRarity = Number(bestItem['희귀도']) || 999;
+            let cRarity = parseFloat(getSafeVal(item, '희귀').toString().replace(/[^0-9.]/g, '')) || 999;
+            let bRarity = parseFloat(getSafeVal(bestItem, '희귀').toString().replace(/[^0-9.]/g, '')) || 999;
             if (cRarity < bRarity) bestItem = item;
         }
-        let bestQuote = bestItem['대사'] ? bestItem['대사'].toString().trim() : '';
+        
+        let bestQuote = getSafeVal(bestItem, '대사').toString().trim();
 
         let logMsg = "";
         const logArea = document.getElementById('gacha-log');
@@ -689,9 +693,9 @@
             playerData.inventory.push(item['이름']);
             logMsg += `${prefix} [${item['구분']}] ${item['이름']} 획득\n`;
 
-            let rawColor = item['폰트 색깔'] || item['폰트색깔'] || item['색상코드'] || item['색상'] || '#ffffff';
-            rawColor = rawColor.toString().trim();
+            let rawColor = getSafeVal(item, '색');
             if (rawColor !== '' && rawColor !== '#ffffff' && !rawColor.startsWith('#')) rawColor = '#' + rawColor;
+            else if (!rawColor) rawColor = '#ffffff';
             
             logArea.innerHTML += `<div style="margin-bottom: 5px;">${prefix} <span style="color: ${rawColor}; font-weight:bold;">[${item['구분']}] ${item['이름']}</span> 획득</div>`;
         });
@@ -700,8 +704,7 @@
         const resultEl = document.getElementById('gacha-result');
         if (times === 1) {
             let item = pulledItems[0];
-            let rawColor = item['폰트 색깔'] || item['폰트색깔'] || item['색상코드'] || item['색상'] || '#ffffff';
-            rawColor = rawColor.toString().trim();
+            let rawColor = getSafeVal(item, '색');
             if (!rawColor.startsWith('#')) rawColor = '#' + rawColor;
 
             resultEl.innerHTML = `
@@ -712,13 +715,12 @@
             let gridHtml = `<div class="gacha-grid">`;
             pulledItems.forEach((item, index) => {
                 let isBonus = (index === 10);
-                let rawColor = item['폰트 색깔'] || item['폰트색깔'] || item['색상코드'] || item['색상'] || '#ffffff';
-                rawColor = rawColor.toString().trim();
+                let rawColor = getSafeVal(item, '색');
                 if (!rawColor.startsWith('#')) rawColor = '#' + rawColor;
 
                 gridHtml += `
                     <div style="background:rgba(0,0,0,0.5); border:1px solid ${isBonus ? 'var(--gold-main)' : 'rgba(255,255,255,0.1)'}; padding:12px 5px; border-radius:4px; text-align:center; box-shadow: ${isBonus ? '0 0 10px rgba(212, 178, 111, 0.3)' : 'none'};">
-                        ${isBonus ? '<div style="color:var(--gold-main); font-size:11px; margin-bottom:5px; font-weight:bold;">🔥 보너스</div>' : ''}
+                        ${isBonus ? '<div style="color:var(--gold-main); font-size:11px; margin-bottom:5px; font-weight:bold;">보너스</div>' : ''}
                         <div style="color:${rawColor}; font-weight:bold; font-size:14px;">[${item['구분']}]<br>${item['이름']}</div>
                     </div>
                 `;
@@ -730,6 +732,13 @@
         const quoteEl = document.getElementById('shopkeeper-quote');
         if (bestQuote) quoteEl.innerText = `"${bestQuote}"`;
         else quoteEl.innerText = `"어서옵쇼~~ 당신의 영원한 친구, 버디의 상점에 오신 걸 환영합디다!"`;
+
+                const success = await savePlayerData("가챠", logMsg.trim(), null, decrements);
+        if (!success) {
+            playerData.coins += cost;
+            updateTopBar();
+        }
+    }
 
         await savePlayerData("가챠", logMsg.trim(), null, decrements);
     }
@@ -782,7 +791,7 @@
                 let newHp = Math.min(char.hp + healAmount, char.maxHp);
                 char.hp = newHp; 
                 updates.push({name: target, healAmount: healAmount});
-                logResult = `[대접] ${target} 님에게 음료가 제공됩니다.\n회복량: 20 + 1d10(${dice}) = 총 ${healAmount} 회복!\n▶ 체력 반영: 완료 (${newHp} / ${char.maxHp})`;
+                logResult = `[대접] ${target}님에게 특별한 음료가 제공됩니다.\n회복량: 20 + 1d10(${dice}) = 총 ${healAmount} 회복!\n▶ 체력 반영: 완료 (${newHp} / ${char.maxHp})`;
             } else {
                 logResult = `[대접] ${target}님 회복량: 20 + 1d10(${dice}) = 총 ${healAmount} 회복!\n(※ 미등록 유저라 체력이 자동 반영되지 않습니다.)`;
             }
@@ -818,15 +827,18 @@
         });
         showLoading(false);
 
-        if (updates.some(u => u.name === playerData.name)) {
-            let myChar = getCharInfo(playerData.name);
-            if(myChar) playerData.hp = myChar.hp;
-            updateTopBar();
+        if (res && res.success) {
+            if (updates.some(u => u.name === playerData.name)) {
+                let myChar = getCharInfo(playerData.name);
+                if(myChar) playerData.hp = myChar.hp;
+                updateTopBar();
+            }
+            const logArea = document.getElementById('heal-log');
+            logArea.value += `==========[ 시스템 ]==========\n${logResult}\n\n`;
+            logArea.scrollTop = logArea.scrollHeight;
+        } else {
+            alert("회복 반영 실패!\n(사유: " + (res ? res.msg : "서버 응답 없음") + ")");
         }
-
-        const logArea = document.getElementById('heal-log');
-        logArea.value += `==========[ 시스템 ]==========\n${logResult}\n\n`;
-        logArea.scrollTop = logArea.scrollHeight;
     }
 </script>
 </body>
