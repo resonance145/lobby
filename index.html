@@ -406,7 +406,7 @@
         showLoading(false);
 
         if (res && res.success) {
-            alert(`성공.\n[${itemToTransfer}] 아이템을 ${targetName} 님에게 안전하게 양도했습니다.`);
+            alert(`성공.\n[${itemToTransfer}] 아이템을 ${targetName} 님에게 양도했습니다.`);
             buildInventoryUI(); 
         } else {
             alert("양도 실패: " + (res ? res.msg : "서버 오류"));
@@ -557,7 +557,7 @@
         document.getElementById('heal-input-section').style.display = 'block';
         inputsDiv.innerHTML = '';
         
-        let typeName = count === 1 ? "대접 (20 + 1d10)" : `생명의 물방울 (${count}인 차등 분배)`;
+        let typeName = count === 1 ? "대접 (20 + 1d10)" : `생명의 물방울 (${count}인 분배)`;
         document.getElementById('heal-desc').innerText = `선택된 스킬: ${typeName} / 대상을 입력하세요.`;
 
         for (let i = 1; i <= count; i++) {
@@ -590,7 +590,7 @@
                 let newHp = Math.min(char.hp + healAmount, char.maxHp);
                 char.hp = newHp; 
                 updates.push({name: target, healAmount: healAmount});
-                logResult = `[대접] ${target}님에게 특별한 음료가 제공됩니다.\n회복량: 20 + 1d10(${dice}) = 총 ${healAmount} 회복!\n▶ 체력 반영: 완료 (${newHp} / ${char.maxHp})`;
+                logResult = `[대접] ${target} 님에게 음료가 제공됩니다.\n회복량: 20 + 1d10(${dice}) = 총 ${healAmount} 회복!\n▶ 체력 반영: 완료 (${newHp} / ${char.maxHp})`;
             } else {
                 logResult = `[대접] ${target}님 회복량: 20 + 1d10(${dice}) = 총 ${healAmount} 회복!\n(※ 미등록 유저라 체력이 자동 반영되지 않습니다.)`;
             }
