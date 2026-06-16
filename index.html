@@ -244,7 +244,7 @@
             if(!pw) return alert("비밀번호를 입력해주세요.");
 
             if(!API_URL || API_URL === "웹_앱_주소" || API_URL === "") {
-                return alert("⚠️ [개발자 오류]\nHTML 내부 상단의 API_URL 변수에 웹 앱 URL 주소가 입력되지 않았습니다!");
+                return alert("⚠️\nHTML 내부 상단의 API_URL 변수에 웹 앱 URL 주소가 입력되지 않음");
             }
 
             showLoading(true);
@@ -557,7 +557,7 @@
         document.getElementById('heal-input-section').style.display = 'block';
         inputsDiv.innerHTML = '';
         
-        let typeName = count === 1 ? "대접 (20 + 1d10)" : `생명의 물방울 (${count}인 분배)`;
+        let typeName = count === 1 ? "대접 (20 + 1d10)" : `생명의 물방울 (${count}인)`;
         document.getElementById('heal-desc').innerText = `선택된 스킬: ${typeName} / 대상을 입력하세요.`;
 
         for (let i = 1; i <= count; i++) {
@@ -592,7 +592,7 @@
                 updates.push({name: target, healAmount: healAmount});
                 logResult = `[대접] ${target} 님에게 음료가 제공됩니다.\n회복량: 20 + 1d10(${dice}) = 총 ${healAmount} 회복!\n▶ 체력 반영: 완료 (${newHp} / ${char.maxHp})`;
             } else {
-                logResult = `[대접] ${target}님 회복량: 20 + 1d10(${dice}) = 총 ${healAmount} 회복!\n(※ 미등록 유저라 체력이 자동 반영되지 않습니다.)`;
+                logResult = `[대접] ${target} 님 회복량: 20 + 1d10(${dice}) = 총 ${healAmount} 회복!\n(※ 미등록 유저라 체력이 자동 반영되지 않습니다.)`;
             }
         } else {
             let base = 0; let diceSides = 0;
