@@ -558,7 +558,7 @@
         inputsDiv.innerHTML = '';
         
         let typeName = count === 1 ? "대접 (20 + 1d10)" : `생명의 물방울 (${count}인)`;
-        document.getElementById('heal-desc').innerText = `선택된 스킬: ${typeName} / 대상을 입력하세요.`;
+        document.getElementById('heal-desc').innerText = `선택된 스킬: ${typeName}`;
 
         for (let i = 1; i <= count; i++) {
             inputsDiv.innerHTML += `<input type="text" id="target-${i}" style="width:100%; padding:10px; background:rgba(0,0,0,0.5); border:1px solid var(--text-sub); color:#fff; border-radius:4px; box-sizing:border-box;" placeholder="대상 ${i} 이름">`;
