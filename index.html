@@ -135,7 +135,7 @@
         <div class="item-grid" id="inventory-list"></div>
     </div>
 
-    <div id="view-shop" class="view">
+<div id="view-shop" class="view">
         
         <div style="display: flex; align-items: flex-start; gap: 15px; background: rgba(20, 18, 24, 0.8); border: 1px solid var(--gold-dark); border-left: 5px solid var(--gold-main); border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);">
             <div style="flex:1; position:relative;">
@@ -162,6 +162,10 @@
                 <button class="btn-outline" style="margin-bottom:25px; font-size:13px; padding:6px 12px; border-radius: 20px;" onclick="openProbModal()">뽑기 확률 안내</button>
 
                 <div id="gacha-limited-display" style="margin: 0 auto 20px auto; max-width: 600px; display: none;"></div>
+                
+                <div id="gacha-result" style="font-size: 24px; font-weight: bold; margin: 20px 0; min-height: 80px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    새로운 아이템 뽑기.
+                </div>
                 
                 <div style="display:flex; justify-content:center; gap:20px; margin-bottom:20px;">
                     <button class="btn-primary" onclick="rollGacha(1)" style="width: 180px; padding: 15px; border-radius: 30px; font-size: 16px;">1회 탐색 (100 G)</button>
@@ -210,7 +214,6 @@
     let playerData = null;
     let systemData = null; 
 
-    // 한국어 조사 자동 변환 함수 ('을/를', '이/가', '은/는', '과/와')
     function getJosa(word, josaType) {
         if (!word) return '';
         const lastChar = word.charCodeAt(word.length - 1);
