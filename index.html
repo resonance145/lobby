@@ -642,7 +642,7 @@
         return pickedItem;
     }
 
-    let gachaCount = 0;
+let gachaCount = 0;
     async function rollGacha(times) {
         const cost = times === 11 ? 1000 : 100;
         if (playerData.coins < cost) return alert("코인이 부족합니다!");
@@ -653,12 +653,15 @@
         playerData.coins -= cost;
         updateTopBar();
         
-        let pulledItems = []; let decrements = {}; 
+        let pulledItems = [];
+        let decrements = {}; 
 
         for(let i=0; i<times; i++) {
             let pulled = pullOneItem();
             if(!pulled) break; 
+            
             pulledItems.push({...pulled});
+            
             let isLimited = (pulled['개수 제한'] === 'Y' || pulled['개수제한'] === 'Y');
             if(isLimited) {
                 pulled['개수'] = Number(pulled['개수']) - 1; 
@@ -668,12 +671,14 @@
         
         if(pulledItems.length === 0) {
             alert("시스템 오류로 아이템을 뽑지 못했습니다.");
-            playerData.coins += cost; updateTopBar(); return;
+            playerData.coins += cost;
+            updateTopBar();
+            return;
         }
 
         const getSafeVal = (obj, keyword) => {
             let k = Object.keys(obj).find(key => key.includes(keyword));
-            return k && obj[k] ? obj[k] : '';
+            return k && obj[k] !== undefined && obj[k] !== null ? obj[k] : '';
         };
 
         let bestItem = pulledItems[0];
@@ -696,7 +701,7 @@
             playerData.inventory.push(item['이름']);
             logMsg += `${prefix} [${item['구분']}] ${item['이름']} 획득\n`;
 
-            let rawColor = getSafeVal(item, '색');
+            let rawColor = getSafeVal(item, '색').toString().trim();
             if (rawColor !== '' && rawColor !== '#ffffff' && !rawColor.startsWith('#')) rawColor = '#' + rawColor;
             else if (!rawColor) rawColor = '#ffffff';
             
@@ -707,7 +712,7 @@
         const resultEl = document.getElementById('gacha-result');
         if (times === 1) {
             let item = pulledItems[0];
-            let rawColor = getSafeVal(item, '색');
+            let rawColor = getSafeVal(item, '색').toString().trim();
             if (!rawColor.startsWith('#')) rawColor = '#' + rawColor;
 
             resultEl.innerHTML = `
@@ -718,12 +723,12 @@
             let gridHtml = `<div class="gacha-grid">`;
             pulledItems.forEach((item, index) => {
                 let isBonus = (index === 10);
-                let rawColor = getSafeVal(item, '색');
+                let rawColor = getSafeVal(item, '색').toString().trim();
                 if (!rawColor.startsWith('#')) rawColor = '#' + rawColor;
 
                 gridHtml += `
                     <div style="background:rgba(0,0,0,0.5); border:1px solid ${isBonus ? 'var(--gold-main)' : 'rgba(255,255,255,0.1)'}; padding:12px 5px; border-radius:4px; text-align:center; box-shadow: ${isBonus ? '0 0 10px rgba(212, 178, 111, 0.3)' : 'none'};">
-                        ${isBonus ? '<div style="color:var(--gold-main); font-size:11px; margin-bottom:5px; font-weight:bold;">보너스</div>' : ''}
+                        ${isBonus ? '<div style="color:var(--gold-main); font-size:11px; margin-bottom:5px; font-weight:bold;">🔥 보너스</div>' : ''}
                         <div style="color:${rawColor}; font-weight:bold; font-size:14px;">[${item['구분']}]<br>${item['이름']}</div>
                     </div>
                 `;
@@ -733,12 +738,16 @@
         }
 
         const quoteEl = document.getElementById('shopkeeper-quote');
-        if (bestQuote) quoteEl.innerText = `"${bestQuote}"`;
-        else quoteEl.innerText = `"어서옵쇼~~ 당신의 영원한 친구, 버디의 상점에 오신 걸 환영합디다!"`;
+        if (quoteEl) {
+            if (bestQuote) quoteEl.innerText = `"${bestQuote}"`;
+            else quoteEl.innerText = `"어서옵쇼~~ 당신의 영원한 친구, 버디의 상점에 오신 걸 환영합디다!"`;
+        }
 
-                const success = await savePlayerData("가챠", logMsg.trim(), null, decrements);
+        const success = await savePlayerData("가챠", logMsg.trim(), null, decrements);
+
         if (!success) {
-            playerData.coins += cost;
+            playerData.coins += cost; 
+            for(let i=0; i<times; i++) { playerData.inventory.pop(); }
             updateTopBar();
         }
     }
