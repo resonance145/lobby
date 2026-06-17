@@ -108,7 +108,7 @@
         <div class="modal-box">
             <h3 id="modal-transfer-item-name" style="color: var(--gold-light); font-size: 22px; margin-top:0;">아이템 이름</h3>
             <p style="color: #fff; font-size: 16px; margin-bottom: 15px;">누구에게 양도하시겠습니까?</p>
-            <input type="text" id="transfer-target-name" placeholder="받을 캐릭터의 이름 (시트와 동일하게)" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.5); border: 1px solid var(--text-sub); color: #fff; text-align: center; margin-bottom: 15px; box-sizing: border-box; font-size: 15px;">
+            <input type="text" id="transfer-target-name" placeholder="받을 캐릭터의 이름" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.5); border: 1px solid var(--text-sub); color: #fff; text-align: center; margin-bottom: 15px; box-sizing: border-box; font-size: 15px;">
             <p style="color: var(--text-sub); font-size: 12px; margin-top: 0;">※ 양도 완료 시 소지품에서 사라집니다.</p>
             <div style="display: flex; gap: 10px; margin-top: 15px;">
                 <button class="btn-primary" id="btn-confirm-transfer">양도하기</button>
@@ -135,7 +135,7 @@
         <div class="item-grid" id="inventory-list"></div>
     </div>
 
-    <div id="view-shop" class="view">
+<div id="view-shop" class="view">
         
         <div style="display: flex; align-items: flex-start; gap: 15px; background: rgba(20, 18, 24, 0.8); border: 1px solid var(--gold-dark); border-left: 5px solid var(--gold-main); border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);">
             <div style="flex:1; position:relative;">
@@ -162,9 +162,11 @@
                 <button class="btn-outline" style="margin-bottom:25px; font-size:13px; padding:6px 12px; border-radius: 20px;" onclick="openProbModal()">뽑기 확률 안내</button>
 
                 <div id="gacha-limited-display" style="margin: 0 auto 20px auto; max-width: 600px; display: none;"></div>
+                
+                <div id="gacha-quote" style="font-size: 15px; color: var(--gold-light); font-style: italic; margin: 15px auto; max-width: 600px; line-height: 1.6; font-weight: bold; background: rgba(255,255,255,0.02); border: 1px dashed rgba(212, 178, 111, 0.2); padding: 12px; border-radius: 6px; display: none; white-space: pre-wrap;"></div>
 
                 <div id="gacha-result" style="font-size: 24px; font-weight: bold; margin: 20px 0; min-height: 80px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                    새로운 아이템을 발견하기.
+                    운명에 맡겨 새로운 아이템을 발견하십시오.
                 </div>
                 
                 <div style="display:flex; justify-content:center; gap:20px; margin-bottom:20px;">
@@ -180,20 +182,20 @@
     <div id="view-bar" class="view">
         <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--gold-dark); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
             <h3 style="color: var(--gold-light); font-size: 26px; margin-top: 0; font-family: var(--font-serif);">휴식과 회복</h3>
-            <p style="color: var(--gold-light);">※ 굴린 주사위 결과는 대상자의 구글 시트 체력에 즉시 자동 반영됩니다.</p>
+            <p style="color: var(--gold-light);">※ 결과는 대상자의 구글 시트 체력에 자동 반영됩니다.</p>
         </div>
         
         <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-            <button class="btn-outline" onclick="setHealTarget(1, this)">1명 (대접)</button>
-            <button class="btn-outline" onclick="setHealTarget(3, this)">3명 (다중)</button>
-            <button class="btn-outline" onclick="setHealTarget(4, this)">4명 (다중)</button>
-            <button class="btn-outline" onclick="setHealTarget(5, this)">5명 (다중)</button>
+            <button class="btn-outline" onclick="setHealTarget(1, this)">1명</button>
+            <button class="btn-outline" onclick="setHealTarget(3, this)">3명</button>
+            <button class="btn-outline" onclick="setHealTarget(4, this)">4명</button>
+            <button class="btn-outline" onclick="setHealTarget(5, this)">5명</button>
         </div>
 
         <div id="heal-input-section" style="display: none; background: rgba(255,255,255,0.03); padding: 20px; border-radius: 8px;">
             <p id="heal-desc" style="color: var(--gold-main); font-size: 15px; margin-top:0; font-weight:bold;"></p>
             <div id="heal-inputs" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-bottom: 20px;"></div>
-            <button class="btn-primary" style="width: auto;" onclick="rollHeal()">회복 주사위 굴리기</button>
+            <button class="btn-primary" style="width: auto;" onclick="rollHeal()">회복하기</button>
         </div>
 
         <textarea id="heal-log" class="log-box" readonly onclick="copyLog(this)" title="클릭하면 복사됩니다." placeholder="[시스템] 회복 결과가 누적됩니다. 클릭 시 자동 복사됩니다."></textarea>
@@ -202,7 +204,7 @@
     <div id="view-info" class="view">
         <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--gold-dark); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
             <h3 style="color: var(--gold-light); font-size: 26px; margin-top: 0; font-family: var(--font-serif);">📢 시스템 공지사항</h3>
-            <p style="color: var(--text-sub);">커뮤니티의 주요 안내 및 업데이트 사항을 확인하세요.</p>
+            <p style="color: var(--text-sub);">주요 안내 및 업데이트 사항을 확인하세요.</p>
         </div>
         <div id="notice-list" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;"></div>
     </div>
@@ -564,7 +566,6 @@
                 let isSoldOut = isLimited && stock <= 0;
 
                 if (isSoldOut) {
-                    // 품절된 경우 취소선을 긋고 (품절)로 표기합니다.
                     groupHtml += `<span style="background:rgba(0,0,0,0.5); padding:5px 10px; border-radius:4px; font-size:13px; color:#666; border: 1px solid rgba(255,255,255,0.05); text-decoration: line-through;">${item['이름']} (품절)</span>`;
                 } else {
                     groupHtml += `<span style="background:rgba(0,0,0,0.5); padding:5px 10px; border-radius:4px; font-size:13px; color:${rawColor}; border: 1px solid rgba(255,255,255,0.05);">${item['이름']} (${getCleanProb(item['확률'])}%)</span>`;
@@ -653,7 +654,7 @@
     }
 
     let gachaCount = 0;
-    async function rollGacha(times) {
+async function rollGacha(times) {
         const cost = times === 11 ? 1000 : 100;
         if (playerData.coins < cost) return alert("코인이 부족합니다!");
         
@@ -747,10 +748,14 @@
             resultEl.innerHTML = gridHtml;
         }
 
-        const quoteEl = document.getElementById('shopkeeper-quote');
-        if (quoteEl) {
-            if (bestQuote) quoteEl.innerText = `"${bestQuote}"`;
-            else quoteEl.innerText = `"어서옵쇼~~ 당신의 영원한 친구, 버디의 상점에 오신 걸 환영합디다!"`;
+        const gachaQuoteEl = document.getElementById('gacha-quote');
+        if (gachaQuoteEl) {
+            if (bestQuote) {
+                gachaQuoteEl.innerText = `"${bestQuote}"`;
+                gachaQuoteEl.style.display = 'block';
+            } else {
+                gachaQuoteEl.style.display = 'none';
+            }
         }
 
         const success = await savePlayerData("가챠", logMsg.trim(), null, decrements);
@@ -778,7 +783,7 @@
         else if (count === 4) typeName = "생명의 물방울 : 4명 (10 + 1d6)";
         else if (count === 5) typeName = "생명의 물방울 : 5명 (8 + 1d5)";
 
-        document.getElementById('heal-desc').innerText = `선택된 스킬: ${typeName} / 대상을 입력하세요.`;
+        document.getElementById('heal-desc').innerText = `선택된 스킬: ${typeName}`;
 
         for (let i = 1; i <= count; i++) {
             inputsDiv.innerHTML += `<input type="text" id="target-${i}" style="width:100%; padding:10px; background:rgba(0,0,0,0.5); border:1px solid var(--text-sub); color:#fff; border-radius:4px; box-sizing:border-box;" placeholder="대상 ${i} 이름">`;
@@ -810,7 +815,7 @@
                 let newHp = Math.min(char.hp + healAmount, char.maxHp);
                 char.hp = newHp; 
                 updates.push({name: target, healAmount: healAmount});
-                logResult = `[대접] ${target}님에게 특별한 음료가 제공됩니다.\n회복량: 20 + 1d10(${dice}) = 총 ${healAmount} 회복!\n▶ 체력 반영: 완료 (${newHp} / ${char.maxHp})`;
+                logResult = `[대접] ${target} 님에게 음료가 제공됩니다.\n회복량: 20 + 1d10(${dice}) = 총 ${healAmount} 회복!\n▶ 체력 반영: 완료 (${newHp} / ${char.maxHp})`;
             } else {
                 logResult = `[대접] ${target}님 회복량: 20 + 1d10(${dice}) = 총 ${healAmount} 회복!\n(※ 미등록 유저라 체력이 자동 반영되지 않습니다.)`;
             }
