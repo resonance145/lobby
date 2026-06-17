@@ -336,7 +336,7 @@
             if(!pw) return alert("비밀번호를 입력해주세요.");
 
             if(!API_URL || API_URL === "") {
-                return alert("[개발자 오류]\nHTML 내부 상단의 API_URL 변수에 웹 앱 URL 주소가 입력되지 않았습니다!");
+                return alert("웹 앱 URL 주소 입력 안 됨.");
             }
 
             showLoading(true);
@@ -778,7 +778,7 @@
                 
                 gridHtml += `
                     <div class="item-card ${isHighestRarity ? 'rarity-gold-border' : ''}" style="background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1); padding:12px 5px; border-radius:4px; text-align:center;">
-                        ${isBonus ? '<div style="color:var(--gold-main); font-size:11px; margin-bottom:5px; font-weight:bold;">🔥 보너스</div>' : ''}
+                        ${isBonus ? '<div style="color:var(--gold-main); font-size:11px; margin-bottom:5px; font-weight:bold;">보너스</div>' : ''}
                         <div style="color:${rawColor}; font-weight:bold; font-size:14px;">[${item['구분']}]<br>${item['이름']}</div>
                     </div>
                 `;
