@@ -209,7 +209,7 @@
 </div>
 
 <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbzEO9cbWDMh6I1cf85nWjOn1psqYohENUWihxbmVGs26yTeSliKYHHo7ljJl0aW3D4L/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbzEO9cbWDMh6I1cf85nWjOn1psqYohENUWihxbmVGs26yTeSliKYHHo7ljJl0aW3D4L/exec"; 
 
     let playerData = null;
     let systemData = null; 
@@ -310,7 +310,7 @@
             const pw = document.getElementById('login-pw').value.trim();
             if(!pw) return alert("비밀번호를 입력해주세요.");
 
-            if(!API_URL || API_URL === "웹_앱_주소" || API_URL === "") {
+            if(!API_URL || API_URL === "") {
                 return alert("[개발자 오류]\nHTML 내부 상단의 API_URL 변수에 웹 앱 URL 주소가 입력되지 않았습니다!");
             }
 
@@ -332,6 +332,7 @@
                 nav('lobby');
                 alert(`[시스템] ${playerData.name} 님, 환영합니다.`);
             } else {
+
                 alert(res.msg || "없는 비밀번호입니다.");
             }
         } catch(e) {
@@ -475,7 +476,7 @@
             
             if (isLimited) {
                 if (stock <= 0) { stockHtml = `<span style="color: #ff5555; font-weight: bold; font-size: 13px;">[품절]</span>`; isSoldOut = true; } 
-                else if (stock === 1) { stockHtml = `<span style="color: #ff3333; font-weight: bold; font-size: 13px;">[한정 수량: 1개]</span>`; } 
+                else if (stock === 1) { stockHtml = `<span style="color: #ff3333; font-weight: bold; font-size: 13px;">[한정 수량: 1개 남음!]</span>`; } 
                 else { stockHtml = `<span style="color: var(--text-sub); font-size: 13px;">[한정 수량: ${stock}개]</span>`; }
             } else { stockHtml = `<span style="color: #4caf50; font-size: 13px;">[상시 판매 상품]</span>`; }
 
@@ -516,7 +517,7 @@
             return true; 
         } 
         else { 
-            alert("시트 반영 실패!\n(사유: " + (res ? res.msg : "서버 응답 없음") + ")"); 
+            alert("시트 반영 실패!\n(사유: " + (res ? res.msg : "서버 응답 없음") + ")");
             return false; 
         }
     }
@@ -532,6 +533,7 @@
         }
     }
 
+    // ⭐ 품절된 아이템 확률표 반영 수정
     function openProbModal() {
         const list = document.getElementById('prob-list');
         list.innerHTML = '';
@@ -557,8 +559,16 @@
                 rawColor = rawColor.toString().trim();
                 if (rawColor !== '' && rawColor !== '#ffffff' && !rawColor.startsWith('#')) rawColor = '#' + rawColor;
                 
-                // ⭐ 아이템 이름 옆에 확률 표기 추가
-                groupHtml += `<span style="background:rgba(0,0,0,0.5); padding:5px 10px; border-radius:4px; font-size:13px; color:${rawColor}; border: 1px solid rgba(255,255,255,0.05);">${item['이름']} (${getCleanProb(item['확률'])}%)</span>`;
+                let isLimited = (item['개수 제한'] === 'Y' || item['개수제한'] === 'Y');
+                let stock = Number(item['개수']) || 0;
+                let isSoldOut = isLimited && stock <= 0;
+
+                if (isSoldOut) {
+                    // 품절된 경우 취소선을 긋고 (품절)로 표기합니다.
+                    groupHtml += `<span style="background:rgba(0,0,0,0.5); padding:5px 10px; border-radius:4px; font-size:13px; color:#666; border: 1px solid rgba(255,255,255,0.05); text-decoration: line-through;">${item['이름']} (품절)</span>`;
+                } else {
+                    groupHtml += `<span style="background:rgba(0,0,0,0.5); padding:5px 10px; border-radius:4px; font-size:13px; color:${rawColor}; border: 1px solid rgba(255,255,255,0.05);">${item['이름']} (${getCleanProb(item['확률'])}%)</span>`;
+                }
             });
             
             groupHtml += `</div></div>`;
@@ -590,7 +600,7 @@
             let stock = Number(item['개수']);
             let stockHtml = '';
             if (stock <= 0) stockHtml = `<span style="color:#666;">품절</span>`;
-            else if (stock === 1) stockHtml = `<span style="color:#ff5555; font-weight:bold;">1개</span>`;
+            else if (stock === 1) stockHtml = `<span style="color:#ff5555; font-weight:bold;">1개 남음!</span>`;
             else stockHtml = `<span style="color:#ccc;">${stock}개</span>`;
             
             html += `<div style="background:rgba(0,0,0,0.5); padding:6px 12px; border-radius:15px; border:1px solid rgba(255,255,255,0.05); font-size:13px; display:flex; gap:8px;">
@@ -642,7 +652,7 @@
         return pickedItem;
     }
 
-let gachaCount = 0;
+    let gachaCount = 0;
     async function rollGacha(times) {
         const cost = times === 11 ? 1000 : 100;
         if (playerData.coins < cost) return alert("코인이 부족합니다!");
@@ -744,15 +754,12 @@ let gachaCount = 0;
         }
 
         const success = await savePlayerData("가챠", logMsg.trim(), null, decrements);
-
+        
         if (!success) {
             playerData.coins += cost; 
             for(let i=0; i<times; i++) { playerData.inventory.pop(); }
             updateTopBar();
         }
-    }
-
-        await savePlayerData("가챠", logMsg.trim(), null, decrements);
     }
 
     let healTargetCount = 0;
@@ -771,7 +778,7 @@ let gachaCount = 0;
         else if (count === 4) typeName = "생명의 물방울 : 4명 (10 + 1d6)";
         else if (count === 5) typeName = "생명의 물방울 : 5명 (8 + 1d5)";
 
-        document.getElementById('heal-desc').innerText = `선택된 스킬: ${typeName}`;
+        document.getElementById('heal-desc').innerText = `선택된 스킬: ${typeName} / 대상을 입력하세요.`;
 
         for (let i = 1; i <= count; i++) {
             inputsDiv.innerHTML += `<input type="text" id="target-${i}" style="width:100%; padding:10px; background:rgba(0,0,0,0.5); border:1px solid var(--text-sub); color:#fff; border-radius:4px; box-sizing:border-box;" placeholder="대상 ${i} 이름">`;
