@@ -19,6 +19,29 @@
         .view { display: none; flex: 1; padding: 20px 40px; overflow-y: auto; }
         .view.active { display: flex; flex-direction: column; animation: fadeIn 0.4s; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+
+        #gacha-quote {
+            font-size: 16px; 
+            color: #fff; 
+            font-style: italic; 
+            margin: 20px auto; 
+            max-width: 600px; 
+            line-height: 1.8; 
+            font-weight: 500; 
+            background: rgba(0, 0, 0, 0.4); 
+            border: 1px solid var(--gold-dark); 
+            border-radius: 10px; 
+            padding: 20px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            position: relative;
+            border-left: 4px solid var(--gold-main); 
+        }
+
+        .rarity-gold-border {
+            border: 2px solid var(--gold-main) !important;
+            box-shadow: 0 0 15px var(--gold-dark) !important;
+            background: rgba(212, 178, 111, 0.1) !important;
+        }
         
         .top-bar { display: none; justify-content: space-between; align-items: center; padding: 15px 30px; background: rgba(0,0,0,0.5); z-index: 10; border-bottom: 1px solid var(--gold-dark); }
         .top-bar-left { display: flex; align-items: center; gap: 15px; }
@@ -731,15 +754,24 @@ async function rollGacha(times) {
                 <span style="font-size:15px; color:#aaa; font-weight:normal; display:block; margin-top:5px;">효과: ${item['효과']}</span>
             `;
         } else {
+
+            let bestRarityValue = 999;
+            for (let item of pulledItems) {
+                let rarity = parseFloat(getSafeVal(item, '희귀').toString().replace(/[^0-9.]/g, '')) || 999;
+                if (rarity < bestRarityValue) bestRarityValue = rarity;
+            }
+            
             let gridHtml = `<div class="gacha-grid">`;
             pulledItems.forEach((item, index) => {
                 let isBonus = (index === 10);
                 let rawColor = getSafeVal(item, '색').toString().trim();
                 if (!rawColor.startsWith('#')) rawColor = '#' + rawColor;
 
+                let isHighestRarity = (parseFloat(getSafeVal(item, '희귀').toString().replace(/[^0-9.]/g, '')) || 999) === bestRarityValue;
+                
                 gridHtml += `
-                    <div style="background:rgba(0,0,0,0.5); border:1px solid ${isBonus ? 'var(--gold-main)' : 'rgba(255,255,255,0.1)'}; padding:12px 5px; border-radius:4px; text-align:center; box-shadow: ${isBonus ? '0 0 10px rgba(212, 178, 111, 0.3)' : 'none'};">
-                        ${isBonus ? '<div style="color:var(--gold-main); font-size:11px; margin-bottom:5px; font-weight:bold;">보너스</div>' : ''}
+                    <div class="item-card ${isHighestRarity ? 'rarity-gold-border' : ''}" style="background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1); padding:12px 5px; border-radius:4px; text-align:center;">
+                        ${isBonus ? '<div style="color:var(--gold-main); font-size:11px; margin-bottom:5px; font-weight:bold;">🔥 보너스</div>' : ''}
                         <div style="color:${rawColor}; font-weight:bold; font-size:14px;">[${item['구분']}]<br>${item['이름']}</div>
                     </div>
                 `;
@@ -748,14 +780,10 @@ async function rollGacha(times) {
             resultEl.innerHTML = gridHtml;
         }
 
-        const gachaQuoteEl = document.getElementById('gacha-quote');
-        if (gachaQuoteEl) {
-            if (bestQuote) {
-                gachaQuoteEl.innerText = `"${bestQuote}"`;
-                gachaQuoteEl.style.display = 'block';
-            } else {
-                gachaQuoteEl.style.display = 'none';
-            }
+        const quoteEl = document.getElementById('shopkeeper-quote');
+        if (quoteEl) {
+            if (bestQuote) quoteEl.innerText = `"${bestQuote}"`;
+            else quoteEl.innerText = `"어서옵쇼~~ 당신의 영원한 친구, 버디의 상점에 오신 걸 환영합디다!"`;
         }
 
         const success = await savePlayerData("가챠", logMsg.trim(), null, decrements);
