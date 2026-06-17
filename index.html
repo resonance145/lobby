@@ -81,7 +81,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             position: relative;
             border-left: 4px solid var(--gold-main);
-            display: none; /* 뽑기 전에는 숨김 */
+            display: none; 
             white-space: pre-wrap;
         }
 
@@ -142,7 +142,7 @@
 
     <div id="view-login" class="view active" style="justify-content: center;">
         <div class="login-box">
-            <h2 style="color: var(--gold-light); font-family: var(--font-serif); margin-bottom: 30px;">ACCESS CODE</h2>
+            <h2 style="color: var(--gold-light); font-family: var(--font-serif); margin-bottom: 30px;">ACCESS SYSTEM</h2>
             <input type="password" id="login-pw" placeholder="비밀번호 입력">
             <button class="btn-primary" onclick="attemptLogin()" style="margin-top: 15px;">입장하기</button>
         </div>
@@ -204,7 +204,7 @@
 
     <div id="view-bar" class="view">
         <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--gold-dark); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-            <h3 style="color: var(--gold-light); font-size: 26px; margin-top: 0; font-family: var(--font-serif);">회복</h3>
+            <h3 style="color: var(--gold-light); font-size: 26px; margin-top: 0; font-family: var(--font-serif);">휴식과 회복</h3>
             <p style="color: var(--gold-light);">※ 결과는 대상자의 구글 시트 체력에 자동 반영됩니다.</p>
         </div>
         
@@ -400,11 +400,21 @@
         }
 
         const itemDict = {};
+        
         if(systemData.fixedItems) systemData.fixedItems.forEach(i => itemDict[i['이름']] = i['효과']);
         if(systemData.randomItems) systemData.randomItems.forEach(i => itemDict[i['이름']] = i['효과']);
+        
+        if(systemData.customItems) {
+            systemData.customItems.forEach(i => {
+                let nameKey = i['아이템이름'] || i['이름'];
+                let effectKey = i['아이템효과'] || i['효과'];
+                if(nameKey) itemDict[nameKey] = effectKey;
+            });
+        }
 
         playerData.inventory.forEach((itemName, index) => {
             if(!itemName) return;
+            // 딕셔너리에 없으면 기본 문구 출력
             let effect = itemDict[itemName] || "특별한 아이템입니다.";
             list.innerHTML += `
                 <div class="item-card">
@@ -500,7 +510,7 @@
             
             if (isLimited) {
                 if (stock <= 0) { stockHtml = `<span style="color: #ff5555; font-weight: bold; font-size: 13px;">[품절]</span>`; isSoldOut = true; } 
-                else if (stock === 1) { stockHtml = `<span style="color: #ff3333; font-weight: bold; font-size: 13px;">[한정 수량: 1개]</span>`; } 
+                else if (stock === 1) { stockHtml = `<span style="color: #ff3333; font-weight: bold; font-size: 13px;">[한정 수량: 1개 남음!]</span>`; } 
                 else { stockHtml = `<span style="color: var(--text-sub); font-size: 13px;">[한정 수량: ${stock}개]</span>`; }
             } else { stockHtml = `<span style="color: #4caf50; font-size: 13px;">[상시 판매 상품]</span>`; }
 
@@ -611,7 +621,7 @@
         }
         
         let html = '<div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">';
-        html += '<div style="font-weight:bold; color:var(--gold-main); margin-bottom:12px; font-size:14px;">한정 아이템 잔여 수량</div>';
+        html += '<div style="font-weight:bold; color:var(--gold-main); margin-bottom:12px; font-size:14px;">⏳ 한정 유물 잔여 수량</div>';
         html += '<div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">';
         
         limitedItems.forEach(item => {
@@ -622,7 +632,7 @@
             let stock = Number(item['개수']);
             let stockHtml = '';
             if (stock <= 0) stockHtml = `<span style="color:#666;">품절</span>`;
-            else if (stock === 1) stockHtml = `<span style="color:#ff5555; font-weight:bold;">1개</span>`;
+            else if (stock === 1) stockHtml = `<span style="color:#ff5555; font-weight:bold;">1개 남음!</span>`;
             else stockHtml = `<span style="color:#ccc;">${stock}개</span>`;
             
             html += `<div style="background:rgba(0,0,0,0.5); padding:6px 12px; border-radius:15px; border:1px solid rgba(255,255,255,0.05); font-size:13px; display:flex; gap:8px;">
@@ -768,7 +778,7 @@
                 
                 gridHtml += `
                     <div class="item-card ${isHighestRarity ? 'rarity-gold-border' : ''}" style="background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1); padding:12px 5px; border-radius:4px; text-align:center;">
-                        ${isBonus ? '<div style="color:var(--gold-main); font-size:11px; margin-bottom:5px; font-weight:bold;">보너스</div>' : ''}
+                        ${isBonus ? '<div style="color:var(--gold-main); font-size:11px; margin-bottom:5px; font-weight:bold;">🔥 보너스</div>' : ''}
                         <div style="color:${rawColor}; font-weight:bold; font-size:14px;">[${item['구분']}]<br>${item['이름']}</div>
                     </div>
                 `;
