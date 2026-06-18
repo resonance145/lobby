@@ -411,10 +411,12 @@
                 if(nameKey) itemDict[nameKey] = effectKey;
             });
         }
-
+        
+            playerData.inventory = playerData.inventory.filter(item => item.trim() !== "");
+            playerData.inventory.sort((a, b) => a.localeCompare(b, 'ko'));
+        
         playerData.inventory.forEach((itemName, index) => {
             if(!itemName) return;
-            // 딕셔너리에 없으면 기본 문구 출력
             let effect = itemDict[itemName] || "특별한 아이템입니다.";
             list.innerHTML += `
                 <div class="item-card">
