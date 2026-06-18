@@ -210,16 +210,16 @@
             <p style="color: var(--gold-light); margin-bottom:0;">※ 결과는 대상자의 구글 시트 체력에 자동 반영됩니다.</p>
         </div>
 
-        <div style="background: rgba(0,0,0,0.5); border: 1px dashed var(--gold-dark); border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+<div style="background: rgba(0,0,0,0.5); border: 1px dashed var(--gold-dark); border-radius: 8px; padding: 15px; margin-bottom: 20px;">
             <div style="color: #ff9e9e; font-size: 13px; font-weight: bold; margin-bottom: 12px; text-align: center;">* 회복과 상태이상 치료는 각각 하루에 한 번씩만 사용 가능합니다.</div>
             <div style="display: flex; gap: 20px;">
-                <div style="flex: 1; border-right: 1px solid rgba(255,255,255,0.1); padding-right: 15px;">
-                    <div style="color: #a0a0b0; font-size: 13px; margin-bottom: 8px;">[ 금일 체력 회복 명단 ]</div>
-                    <div id="daily-hp-log" style="font-size: 14px; color: var(--gold-light); line-height: 1.6;">-</div>
+                <div style="flex: 1; border-right: 1px solid rgba(255,255,255,0.1); padding-right: 15px; text-align: center;">
+                    <div style="color: var(--gold-light); font-size: 13px; margin-bottom: 8px; font-weight: bold;">[ 금일 체력 회복 명단 ]</div>
+                    <div id="daily-hp-log" style="font-size: 14px; color: #fff; line-height: 1.6;">-</div>
                 </div>
-                <div style="flex: 1; padding-left: 5px;">
-                    <div style="color: #a0a0b0; font-size: 13px; margin-bottom: 8px;">[ 금일 상태이상 치료 명단 ]</div>
-                    <div id="daily-status-log" style="font-size: 14px; color: #a8e6cf; line-height: 1.6;">-</div>
+                <div style="flex: 1; padding-left: 5px; text-align: center;">
+                    <div style="color: #a8e6cf; font-size: 13px; margin-bottom: 8px; font-weight: bold;">[ 금일 상태이상 치료 명단 ]</div>
+                    <div id="daily-status-log" style="font-size: 14px; color: #fff; line-height: 1.6;">-</div>
                 </div>
             </div>
         </div>
@@ -357,8 +357,8 @@
         const statusDiv = document.getElementById('daily-status-log');
         if(!hpDiv || !statusDiv || !systemData.dailyLogs) return;
 
-        hpDiv.innerHTML = systemData.dailyLogs.hp.length > 0 ? systemData.dailyLogs.hp.join(' ') : "-";
-        statusDiv.innerHTML = systemData.dailyLogs.status.length > 0 ? systemData.dailyLogs.status.join(' ') : "-";
+        hpDiv.innerHTML = systemData.dailyLogs.hp.length > 0 ? systemData.dailyLogs.hp.join('<br>') : "-";
+        statusDiv.innerHTML = systemData.dailyLogs.status.length > 0 ? systemData.dailyLogs.status.join('<br>') : "-";
     }
     
     async function fetchDB(payload) {
