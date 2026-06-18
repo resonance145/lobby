@@ -915,7 +915,7 @@ let healTargetCount = 0;
                 if (res.systemData) { systemData = res.systemData; buildDailyLogs(); }
                 updateTopBar();
                 
-                let logStr = `[리샘열매 차] ${target}님의 ${oldStatus} 치료 완료.`;
+                let logStr = `[리샘열매 차] ${target} 님의 ${oldStatus} 치료 완료.`;
                 const logArea = document.getElementById('heal-log');
                 logArea.value += `==========[ 시스템 ]==========\n${logStr}\n\n`;
                 logArea.scrollTop = logArea.scrollHeight;
@@ -934,8 +934,8 @@ let healTargetCount = 0;
             if(char) {
                 let newHp = Math.min(char.hp + healAmount, char.maxHp);
                 char.hp = newHp; updates.push({name: target, healAmount: healAmount});
-                logResult = `[대접] ${target}님에게 음료가 제공됩니다.\n회복량: 20 + 1d10(${dice}) = 총 ${healAmount} 회복!\n▶ 체력 반영: 완료 (${newHp} / ${char.maxHp})`;
-            } else { logResult = `[대접] ${target}님 회복량: 총 ${healAmount} 회복!\n(※ 미등록 유저라 체력이 자동 반영되지 않습니다.)`; }
+                logResult = `[대접] ${target} 님에게 음료가 제공됩니다.\n회복량: 20 + 1d10(${dice}) = 총 ${healAmount} 회복!\n▶ 체력 반영: 완료 (${newHp} / ${char.maxHp})`;
+            } else { logResult = `[대접] ${target} 님 회복량: 총 ${healAmount} 회복!\n(※ 미등록 유저라 체력이 자동 반영되지 않습니다.)`; }
         } else {
             let base = 0; let diceSides = 0;
             if (healTargetCount === 3) { base = 12; diceSides = 8; } 
