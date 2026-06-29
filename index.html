@@ -298,8 +298,13 @@
         else { navUIOnly('login', ''); }
     });
 
-    window.onload = () => { history.replaceState({viewId: 'login', title: ''}, '', '#login'); };
-
+window.onload = () => { 
+        history.replaceState({viewId: 'login', title: ''}, '', '#login'); 
+        document.getElementById('login-pw').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') attemptLogin();
+        });
+    };
+    
     function nav(viewId, title = '') {
         history.pushState({viewId, title}, '', `#${viewId}`);
         navUIOnly(viewId, title);
