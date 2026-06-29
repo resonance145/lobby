@@ -648,7 +648,7 @@
         }
     };
 
-    function buildNPCUI() {
+function buildNPCUI() {
         const listContainer = document.getElementById('npc-list');
         listContainer.innerHTML = '';
         systemData.npcs.forEach(npc => {
@@ -656,8 +656,8 @@
             listContainer.innerHTML += `
                 <div class="char-card-v2" style="background-image: ${bgImage};" onclick="nav('${npc['연결화면']}', '${npc['이름']}')">
                     <div class="char-details">
-                        <h2 style="margin: 0; color: #fff; font-family: var(--font-serif); font-size: 26px;">${npc['이름']}</h2>
-                        <div style="color: var(--gold-main); font-size: 13px; letter-spacing: 1px; margin-bottom: 5px; color:#aaa;">${npc['역할']}</div>
+                        <h2 style="margin: 0; color: var(--gold-light); font-family: var(--font-serif); font-size: 26px;">${npc['이름']}</h2>
+                        <div style="font-size: 13px; letter-spacing: 1px; margin-bottom: 5px; color:#aaa;">${npc['역할']}</div>
                     </div>
                 </div>
             `;
