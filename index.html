@@ -117,10 +117,11 @@
         </div>
     </div>
 
+    <!-- 수정됨: '보낸 이' -> '보낸 사람' -->
     <div id="modal-letter-overlay" class="modal-overlay">
         <div class="modal-box" style="width: 380px;">
             <div style="font-size: 36px; margin-bottom: 10px;">✉️</div>
-            <h3 id="modal-letter-title" style="color: var(--gold-light); font-size: 20px; margin-top:0; margin-bottom:5px;">보낸 이: 누구누구</h3>
+            <h3 id="modal-letter-title" style="color: var(--gold-light); font-size: 20px; margin-top:0; margin-bottom:5px;">보낸 사람: 누구누구</h3>
             <p id="modal-letter-time" style="font-size: 11px; color: var(--text-sub); margin-top:0; margin-bottom:20px; font-family: monospace;"></p>
             <div style="background: rgba(0,0,0,0.5); padding: 20px; border: 1px solid var(--gold-dark); border-radius: 6px; text-align: left; color: #fff; font-size: 14px; line-height: 1.6; max-height: 150px; overflow-y: auto; white-space: pre-wrap; margin-bottom: 25px;" id="modal-letter-content"></div>
             <button class="btn-primary" onclick="closeLetterModal()">닫기</button>
@@ -154,7 +155,7 @@
             <h3 id="modal-transfer-item-name" style="color: var(--gold-light); font-size: 22px; margin-top:0;">아이템 이름</h3>
             <p style="color: #fff; font-size: 15px; margin-bottom: 15px;">아이템을 양도할 대상을 지정하고 설정을 선택하세요.</p>
             
-            <input type="text" id="transfer-target-name" placeholder="받을 캐릭터의 이름" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.5); border: 1px solid var(--text-sub); color: #fff; text-align: center; margin-bottom: 15px; box-sizing: border-box; font-size: 15px; border-radius: 4px;">
+            <input type="text" id="transfer-target-name" placeholder="받을 캐릭터의 이름 (시트와 동일하게)" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.5); border: 1px solid var(--text-sub); color: #fff; text-align: center; margin-bottom: 15px; box-sizing: border-box; font-size: 15px; border-radius: 4px;">
             
             <div class="option-group-box">
                 <span class="option-title">발송인 표시 설정</span>
@@ -173,7 +174,7 @@
                 <textarea id="transfer-msg-input" placeholder="전달할 메시지를 입력해 주세요." style="width:100%; height:70px; margin-top:10px; background:rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:4px; padding:8px; box-sizing:border-box; font-size:13px; resize:none; display:none;"></textarea>
             </div>
 
-            <p style="color: var(--text-sub); font-size: 12px; margin-top: 0;">※ 양도 완료 시 본인의 소지품에서 사라집니다.</p>
+            <p style="color: var(--text-sub); font-size: 12px; margin-top: 0;">※ 양도 완료 시 본인의 소지품에서 즉시 제거됩니다.</p>
             <div style="display: flex; gap: 10px; margin-top: 15px;">
                 <button class="btn-primary" id="btn-confirm-transfer">양도하기</button>
                 <button class="btn-primary btn-cancel" onclick="closeTransferModal()">취소</button>
@@ -181,6 +182,7 @@
         </div>
     </div>
 
+    <!-- 로그인 -->
     <div id="view-login" class="view active" style="justify-content: center;">
         <div class="login-box">
             <h2 style="color: var(--gold-light); font-family: var(--font-serif); margin-bottom: 30px;">ACCESS CODE</h2>
@@ -189,16 +191,19 @@
         </div>
     </div>
 
+    <!-- 메인 로비 -->
     <div id="view-lobby" class="view">
         <div class="char-list" id="npc-list"></div>
     </div>
 
+    <!-- 내 소지품 탭 -->
     <div id="view-inventory" class="view">
         <h3 style="color: var(--gold-light); font-size: 26px; margin-top: 0; font-family: var(--font-serif);">내 소지품 목록</h3>
         <p style="color: var(--text-sub);">현재 소지하고 있는 아이템을 사용하거나 다른 사람에게 양도할 수 있습니다.</p>
         <div class="item-grid" id="inventory-list"></div>
     </div>
 
+    <!-- 상점 -->
     <div id="view-shop" class="view">
         <div style="display: flex; align-items: flex-start; gap: 15px; background: rgba(20, 18, 24, 0.8); border: 1px solid var(--gold-dark); border-left: 5px solid var(--gold-main); border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);">
             <div style="flex:1; position:relative;">
@@ -242,6 +247,7 @@
         </div>
     </div>
 
+    <!-- 바 -->
     <div id="view-bar" class="view">
         <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--gold-dark); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
             <h3 style="color: var(--gold-light); font-size: 26px; margin-top: 0; font-family: var(--font-serif);">휴식과 회복</h3>
@@ -271,11 +277,12 @@
         </div>
     </div>
 
+    <!-- 공지사항 -->
     <div id="view-info" class="view">
         <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--gold-dark); padding: 20px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
             <div>
                 <h3 style="color: var(--gold-light); font-size: 26px; margin-top: 0; margin-bottom: 5px; font-family: var(--font-serif);">📢 시스템 공지사항</h3>
-                <p style="color: var(--text-sub); margin: 0;">커뮤니티의 주요 안내 및 업데이트 사항을 확인하세요.</p>
+                <p style="color: var(--text-sub); margin: 0;">주요 안내 및 업데이트 사항을 확인하세요.</p>
             </div>
             <button id="btn-attendance" onclick="attend()" style="background: var(--gold-main); color: #000; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; box-shadow: 0 0 10px rgba(212,178,111,0.3); white-space: nowrap;">출석하기</button>
         </div>
@@ -617,9 +624,16 @@
         currentLetterIdx = index;
         const item = playerData.inventory[index];
         
-        document.getElementById('modal-letter-title').innerText = `보낸 이: ${item.sender}`;
+        document.getElementById('modal-letter-title').innerText = `보낸 사람: ${item.sender}`;
         document.getElementById('modal-letter-time').innerText = item.date ? `수령 일시: ${item.date}` : "";
-        document.getElementById('modal-letter-content').innerText = item.msg ? item.msg : "(첨부된 메시지가 없습니다.)";
+        
+        const contentBox = document.getElementById('modal-letter-content');
+        if (item.msg && item.msg.trim() !== "") {
+            contentBox.innerText = item.msg;
+            contentBox.style.display = "block"; 
+        } else {
+            contentBox.style.display = "none";  
+        }
         
         document.getElementById('modal-letter-overlay').style.display = 'flex';
         
