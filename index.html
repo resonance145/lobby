@@ -26,9 +26,12 @@
         .back-btn:hover { background: var(--gold-main); color: #000; }
         .page-title { font-family: var(--font-serif); font-size: 24px; color: var(--gold-light); }
         .resources { display: flex; gap: 15px; }
-        .resource-item { background: rgba(0,0,0,0.8); border: 1px solid var(--gold-dark); padding: 5px 15px; border-radius: 15px; display: flex; align-items: center; gap: 8px; font-size: 14px; }
+        .resource-item { background: rgba(0,0,0,0.8); border: 1px solid var(--gold-dark); padding: 5px 15px; border-radius: 15px; display: flex; align-items: center; gap: 8px; font-size: 14px; position: relative; }
         .inv-btn { border-color: var(--gold-light); cursor: pointer; transition: 0.2s; }
         .inv-btn:hover { background: var(--gold-dark); color: #fff; }
+
+        .alert-badge { position: absolute; top: -5px; right: -2px; background: #ff3333; color: white; font-weight: bold; font-size: 11px; padding: 1px 6px; border-radius: 10px; box-shadow: 0 0 8px #ff3333; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
 
         .login-box { margin: auto; padding: 40px; background: var(--panel-bg); border: 1px solid var(--gold-dark); border-radius: 12px; text-align: center; width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .login-box input { width: 100%; padding: 12px; margin: 15px 0; background: rgba(0,0,0,0.5); border: 1px solid var(--text-sub); color: #fff; box-sizing: border-box; text-align: center; font-size: 16px; letter-spacing: 2px; }
@@ -51,9 +54,15 @@
         .char-details div { color: #aaa; font-size: 13px; letter-spacing: 1px; margin-bottom: 5px; }
 
         .item-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; margin-top: 20px;}
-        .item-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; }
+        .item-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
         .item-card:hover { border-color: var(--gold-dark); }
         
+        .item-meta-container { position: absolute; top: 12px; right: 12px; text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+        .item-transfer-date { font-size: 11px; color: var(--text-sub); opacity: 0.8; font-family: monospace; }
+        .letter-icon-wrapper { cursor: pointer; display: inline-flex; align-items: center; position: relative; font-size: 16px; background: rgba(0,0,0,0.4); padding: 4px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); }
+        .letter-icon-wrapper:hover { background: var(--gold-dark); }
+        .letter-alert-dot { position: absolute; top: -4px; right: -4px; background: #ff3333; color: #fff; width: 12px; height: 12px; border-radius: 50%; font-size: 9px; font-weight: bold; display: flex; justify-content: center; align-items: center; border: 1px solid #1a191e; }
+
         .log-box { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid var(--gold-dark); color: #ddd; padding: 15px; box-sizing: border-box; border-radius: 8px; resize: none; line-height: 1.5; font-family: var(--font-main); cursor: pointer; transition: 0.2s;}
         .log-box:hover { background: rgba(0,0,0,0.8); border-color: var(--gold-light); }
         
@@ -65,7 +74,7 @@
         .tab-content.active { display: block; animation: fadeIn 0.3s; }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 200; justify-content: center; align-items: center; }
-        .modal-box { background: var(--panel-bg); border: 1px solid var(--gold-main); padding: 30px; border-radius: 12px; text-align: center; width: 350px; }
+        .modal-box { background: var(--panel-bg); border: 1px solid var(--gold-main); padding: 30px; border-radius: 12px; text-align: center; width: 350px; box-shadow: 0 0 30px rgba(0,0,0,0.7); }
         
         .gacha-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(130px, 1fr)); gap:10px; width:100%; max-height:280px; overflow-y:auto; padding:10px; box-sizing:border-box; }
 
@@ -80,6 +89,12 @@
         
         .heal-input { width: 100%; padding: 12px; background: rgba(0,0,0,0.5); border: 1px solid var(--text-sub); color: #fff; border-radius: 4px; box-sizing: border-box; margin-bottom: 12px; font-size: 15px; text-align: center;}
         .heal-input:focus { outline: none; border-color: var(--gold-main); background: rgba(0,0,0,0.8); }
+
+        .option-group-box { background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 15px; text-align: left; }
+        .option-title { font-size: 13px; color: var(--gold-light); font-weight: bold; margin-bottom: 8px; display: block; }
+        .option-flex { display: flex; gap: 15px; margin-bottom: 5px; }
+        .option-label { display: flex; align-items: center; gap: 6px; color: #ddd; font-size: 14px; cursor: pointer; }
+        .option-label input { cursor: pointer; accent-color: var(--gold-main); }
     </style>
 </head>
 <body>
@@ -98,7 +113,17 @@
                 <span id="ui-status" style="display:none; padding:2px 8px; border-radius:12px; margin-left:8px; font-weight:bold; font-size:12px; color:#fff;"></span>
             </div>
             <div class="resource-item">💰 <span id="ui-coins">0</span> 코인</div>
-            <div class="resource-item inv-btn" onclick="nav('inventory', '내 소지품')">소지품</div>
+            <div class="resource-item inv-btn" onclick="openInventoryView()">소지품 <span id="ui-inv-alert" class="alert-badge" style="display:none;">!</span></div>
+        </div>
+    </div>
+
+    <div id="modal-letter-overlay" class="modal-overlay">
+        <div class="modal-box" style="width: 380px;">
+            <div style="font-size: 36px; margin-bottom: 10px;">✉️</div>
+            <h3 id="modal-letter-title" style="color: var(--gold-light); font-size: 20px; margin-top:0; margin-bottom:5px;">보낸 이: 누구누구</h3>
+            <p id="modal-letter-time" style="font-size: 11px; color: var(--text-sub); margin-top:0; margin-bottom:20px; font-family: monospace;"></p>
+            <div style="background: rgba(0,0,0,0.5); padding: 20px; border: 1px solid var(--gold-dark); border-radius: 6px; text-align: left; color: #fff; font-size: 14px; line-height: 1.6; max-height: 150px; overflow-y: auto; white-space: pre-wrap; margin-bottom: 25px;" id="modal-letter-content"></div>
+            <button class="btn-primary" onclick="closeLetterModal()">닫기</button>
         </div>
     </div>
 
@@ -125,11 +150,30 @@
     </div>
 
     <div id="modal-transfer-overlay" class="modal-overlay">
-        <div class="modal-box">
+        <div class="modal-box" style="width: 380px;">
             <h3 id="modal-transfer-item-name" style="color: var(--gold-light); font-size: 22px; margin-top:0;">아이템 이름</h3>
-            <p style="color: #fff; font-size: 16px; margin-bottom: 15px;">누구에게 양도하시겠습니까?</p>
-            <input type="text" id="transfer-target-name" placeholder="받을 캐릭터의 이름" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.5); border: 1px solid var(--text-sub); color: #fff; text-align: center; margin-bottom: 15px; box-sizing: border-box; font-size: 15px;">
-            <p style="color: var(--text-sub); font-size: 12px; margin-top: 0;">※ 양도 완료 시 소지품에서 사라집니다.</p>
+            <p style="color: #fff; font-size: 15px; margin-bottom: 15px;">아이템을 양도할 대상을 지정하고 설정을 선택하세요.</p>
+            
+            <input type="text" id="transfer-target-name" placeholder="받을 캐릭터의 이름" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.5); border: 1px solid var(--text-sub); color: #fff; text-align: center; margin-bottom: 15px; box-sizing: border-box; font-size: 15px; border-radius: 4px;">
+            
+            <div class="option-group-box">
+                <span class="option-title">발송인 표시 설정</span>
+                <div class="option-flex">
+                    <label class="option-label"><input type="radio" name="ts-sender" value="public" checked> 발송인 공개</label>
+                    <label class="option-label"><input type="radio" name="ts-sender" value="anonymous"> 익명</label>
+                </div>
+            </div>
+
+            <div class="option-group-box">
+                <span class="option-title">메시지 첨부 설정</span>
+                <div class="option-flex">
+                    <label class="option-label"><input type="radio" name="ts-msg-toggle" value="none" checked onchange="toggleTransferMessageInput(false)"> 메시지 없음</label>
+                    <label class="option-label"><input type="radio" name="ts-msg-toggle" value="write" onchange="toggleTransferMessageInput(true)"> 메시지 작성</label>
+                </div>
+                <textarea id="transfer-msg-input" placeholder="전달할 메시지를 입력해 주세요." style="width:100%; height:70px; margin-top:10px; background:rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:4px; padding:8px; box-sizing:border-box; font-size:13px; resize:none; display:none;"></textarea>
+            </div>
+
+            <p style="color: var(--text-sub); font-size: 12px; margin-top: 0;">※ 양도 완료 시 본인의 소지품에서 사라집니다.</p>
             <div style="display: flex; gap: 10px; margin-top: 15px;">
                 <button class="btn-primary" id="btn-confirm-transfer">양도하기</button>
                 <button class="btn-primary btn-cancel" onclick="closeTransferModal()">취소</button>
@@ -201,11 +245,11 @@
     <div id="view-bar" class="view">
         <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--gold-dark); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
             <h3 style="color: var(--gold-light); font-size: 26px; margin-top: 0; font-family: var(--font-serif);">휴식과 회복</h3>
-            <p style="color: var(--gold-light); margin-bottom:0;">※ 결과는 구글 시트에 자동 반영됩니다.</p>
+            <p style="color: var(--gold-light); margin-bottom:0;">※ 굴린 주사위 결과는 대상자의 구글 시트 체력에 즉시 자동 반영됩니다.</p>
         </div>
 
         <div style="background: rgba(0,0,0,0.5); border: 1px dashed var(--gold-dark); border-radius: 8px; padding: 15px; margin-bottom: 20px;">
-            <div style="color: #ff9e9e; font-size: 13px; font-weight: bold; margin-bottom: 12px; text-align: center;">* 회복은 하루에 한 번만 사용 가능합니다.</div>
+            <div style="color: #ff9e9e; font-size: 13px; font-weight: bold; margin-bottom: 12px; text-align: center;">* 체력 회복 스킬은 하루에 한 번씩만 사용 가능합니다.</div>
             <div style="text-align: center;">
                 <div style="color: var(--gold-light); font-size: 13px; margin-bottom: 8px; font-weight: bold;">[ 금일 체력 회복 명단 ]</div>
                 <div id="daily-hp-log" style="font-size: 14px; color: #fff; line-height: 1.6;">-</div>
@@ -265,11 +309,8 @@
     function getJosa(word, josaType) {
         if (!word) return '';
         const lastChar = word.charCodeAt(word.length - 1);
-        if (lastChar < 0xac00 || lastChar > 0xd7a3) {
-            return josaType.split('/')[0];
-        }
+        if (lastChar < 0xac00 || lastChar > 0xd7a3) { return josaType.split('/')[0]; }
         const hasJongseong = (lastChar - 0xac00) % 28 > 0;
-        
         if (josaType === '을/를') return hasJongseong ? '을' : '를';
         if (josaType === '이/가') return hasJongseong ? '이' : '가';
         if (josaType === '은/는') return hasJongseong ? '은' : '는';
@@ -288,9 +329,7 @@
     function copyLog(element) {
         let textToCopy = element.value || element.innerText; 
         if (!textToCopy) return;
-        navigator.clipboard.writeText(textToCopy).then(() => {
-            alert("복사되었습니다!");
-        }).catch(err => { alert("복사에 실패했습니다."); });
+        navigator.clipboard.writeText(textToCopy).then(() => { alert("복사되었습니다!"); }).catch(err => { alert("복사에 실패했습니다."); });
     }
 
     window.addEventListener('popstate', (e) => {
@@ -298,13 +337,13 @@
         else { navUIOnly('login', ''); }
     });
 
-window.onload = () => { 
+    window.onload = () => { 
         history.replaceState({viewId: 'login', title: ''}, '', '#login'); 
         document.getElementById('login-pw').addEventListener('keydown', (e) => {
             if (e.key === 'Enter') attemptLogin();
         });
     };
-    
+
     function nav(viewId, title = '') {
         history.pushState({viewId, title}, '', `#${viewId}`);
         navUIOnly(viewId, title);
@@ -331,6 +370,11 @@ window.onload = () => {
         
         if(viewId === 'inventory') buildInventoryUI();
         if(viewId === 'shop') updateLimitedGachaUI(); 
+    }
+
+    function openInventoryView() {
+        document.getElementById('ui-inv-alert').style.display = 'none';
+        nav('inventory', '내 소지품');
     }
 
     function switchShopTab(type) {
@@ -360,6 +404,13 @@ window.onload = () => {
             statusEl.style.backgroundColor = bg;
         } else {
             statusEl.style.display = 'none';
+        }
+
+        const hasUnread = playerData.inventory && playerData.inventory.some(item => item.read === false);
+        if (hasUnread) {
+            document.getElementById('ui-inv-alert').style.display = 'inline-block';
+        } else {
+            document.getElementById('ui-inv-alert').style.display = 'none';
         }
     }
 
@@ -419,7 +470,7 @@ window.onload = () => {
             if(!pw) return alert("비밀번호를 입력해주세요.");
 
             if(!API_URL || API_URL === "") {
-                return alert("웹 앱 URL 주소 없음");
+                return alert("[개발자 오류]\nHTML 내부 상단의 API_URL 변수에 웹 앱 URL 주소가 입력되지 않았습니다!");
             }
 
             showLoading(true);
@@ -486,12 +537,12 @@ window.onload = () => {
         
         const btnHeal = document.getElementById('btn-heal-execute');
         if(btnHeal) {
-            if(systemData.dailyLogs.hpCasters && systemData.dailyLogs.hpCasters.includes(playerData.name)) {
+            if(systemData.dailyLogs.hp.length > 0) {
                 btnHeal.disabled = true;
                 btnHeal.innerText = "금일 사용 완료";
             } else {
                 btnHeal.disabled = false;
-                btnHeal.innerText = "회복하기";
+                btnHeal.innerText = "회복하기"; 
             }
         }
     }
@@ -499,12 +550,11 @@ window.onload = () => {
     function buildInventoryUI() {
         const list = document.getElementById('inventory-list');
         list.innerHTML = '';
-        if (!playerData.inventory || playerData.inventory.length === 0 || (playerData.inventory.length === 1 && playerData.inventory[0] === "")) {
+        if (!playerData.inventory || playerData.inventory.length === 0) {
             list.innerHTML = '<p style="color:var(--text-sub); grid-column: 1 / -1; text-align:center;">소지품이 비어있습니다.</p>'; return;
         }
 
         const itemDict = {};
-        
         if(systemData.fixedItems) systemData.fixedItems.forEach(i => itemDict[i['이름']] = i['효과']);
         if(systemData.randomItems) systemData.randomItems.forEach(i => itemDict[i['이름']] = i['효과']);
         if(systemData.customItems) {
@@ -515,15 +565,41 @@ window.onload = () => {
             });
         }
 
-        playerData.inventory = playerData.inventory.filter(item => item.trim() !== ""); 
-        playerData.inventory.sort((a, b) => a.localeCompare(b, 'ko')); 
+        playerData.inventory = playerData.inventory.filter(item => item && item.name && item.name.trim() !== ""); 
 
-        playerData.inventory.forEach((itemName, index) => {
-            if(!itemName) return;
+        playerData.inventory.sort((a, b) => {
+            if (a.read !== b.read) { return a.read ? 1 : -1; }
+            if (!a.read) {
+                let dateA = a.date ? new Date(a.date.replace(/\./g, '-')) : new Date(0);
+                let dateB = b.date ? new Date(b.date.replace(/\./g, '-')) : new Date(0);
+                return dateA - dateB;
+            }
+            return a.name.localeCompare(b.name, 'ko');
+        });
+
+        playerData.inventory.forEach((itemObj, index) => {
+            let itemName = itemObj.name;
             let effect = itemDict[itemName] || "특별한 아이템입니다.";
+            
+            let metaHtml = "";
+            if (itemObj.date || itemObj.sender !== "시스템") {
+                let displayTime = itemObj.date ? itemObj.date : "";
+                let alertBadgeHtml = itemObj.read === false ? `<span class="letter-alert-dot">!</span>` : "";
+                
+                metaHtml = `
+                    <div class="item-meta-container">
+                        <span class="item-transfer-date">${displayTime}</span>
+                        <div class="letter-icon-wrapper" onclick="openLetterModal(${index})" title="메시지 확인하기">
+                            ✉️${alertBadgeHtml}
+                        </div>
+                    </div>
+                `;
+            }
+
             list.innerHTML += `
                 <div class="item-card">
-                    <div>
+                    ${metaHtml}
+                    <div style="padding-right: 80px;">
                         <div style="color: var(--gold-light); font-weight: bold; font-size:18px;">${itemName}</div>
                         <div style="font-size: 14px; color: #ccc; margin-top: 8px;">${effect}</div>
                     </div>
@@ -536,8 +612,30 @@ window.onload = () => {
         });
     }
 
+    let currentLetterIdx = -1;
+    function openLetterModal(index) {
+        currentLetterIdx = index;
+        const item = playerData.inventory[index];
+        
+        document.getElementById('modal-letter-title').innerText = `보낸 이: ${item.sender}`;
+        document.getElementById('modal-letter-time').innerText = item.date ? `수령 일시: ${item.date}` : "";
+        document.getElementById('modal-letter-content').innerText = item.msg ? item.msg : "(첨부된 메시지가 없습니다.)";
+        
+        document.getElementById('modal-letter-overlay').style.display = 'flex';
+        
+        if (item.read === false) {
+            item.read = true;
+            updateTopBar();
+            savePlayerData("편지확인", `[${item.name}]의 동봉된 편지 내용 확인 완료`, null, null);
+        }
+    }
+
+    function closeLetterModal() {
+        document.getElementById('modal-letter-overlay').style.display = 'none';
+        buildInventoryUI(); 
+    }
+
     let currentUseIndex = -1; let currentUseItem = "";
-    
     function openUseModal(index, itemName) {
         currentUseIndex = index; currentUseItem = itemName;
         document.getElementById('modal-use-item-name').innerText = itemName;
@@ -577,7 +675,7 @@ window.onload = () => {
         playerData.inventory.splice(currentUseIndex, 1); 
         
         let tagStr = getItemTag(itemName);
-        let logMsg = `[${itemName}] 사용`;
+        let logMsg = `[${itemName}] 사용 (연동된 편지 자동 소멸)`;
         let newHp = Number(playerData.hp);
         let newStatus = playerData.status;
 
@@ -622,9 +720,30 @@ window.onload = () => {
         currentTransferIndex = index; currentTransferItem = itemName;
         document.getElementById('modal-transfer-item-name').innerText = itemName;
         document.getElementById('transfer-target-name').value = ""; 
+        
+        document.querySelector('input[name="ts-sender"][value="public"]').checked = true;
+        document.querySelector('input[name="ts-msg-toggle"][value="none"]').checked = true;
+        
+        const msgInput = document.getElementById('transfer-msg-input');
+        msgInput.value = "";
+        msgInput.style.display = "none";
+
         document.getElementById('modal-transfer-overlay').style.display = 'flex';
     }
+    
+    function toggleTransferMessageInput(visible) {
+        const input = document.getElementById('transfer-msg-input');
+        if(visible) {
+            input.style.display = "block";
+            input.focus();
+        } else {
+            input.style.display = "none";
+            input.value = "";
+        }
+    }
+
     function closeTransferModal() { document.getElementById('modal-transfer-overlay').style.display = 'none'; }
+    
     document.getElementById('btn-confirm-transfer').onclick = async function() {
         const targetName = document.getElementById('transfer-target-name').value.trim();
         if (!targetName) return alert("양도받을 캐릭터의 이름을 입력해주세요.");
@@ -633,27 +752,51 @@ window.onload = () => {
         const isTargetValid = systemData.allCharacters.some(c => c.name === targetName);
         if (!isTargetValid) return alert(`'${targetName}' 이라는 이름을 가진 캐릭터가 구글 시트에 없습니다.\n띄어쓰기나 오타를 확인해 주세요.`);
 
+        const isAnonymous = document.querySelector('input[name="ts-sender"]:checked').value === "anonymous";
+        const isMsgEnabled = document.querySelector('input[name="ts-msg-toggle"]:checked').value === "write";
+        const messageText = isMsgEnabled ? document.getElementById('transfer-msg-input').value.trim() : "";
+
         closeTransferModal();
         const itemToTransfer = currentTransferItem;
+        
         playerData.inventory.splice(currentTransferIndex, 1); 
+
+        let now = new Date();
+        let year = now.getFullYear();
+        let month = String(now.getMonth() + 1).padStart(2, '0');
+        let day = String(now.getDate()).padStart(2, '0');
+        let hours = String(now.getHours()).padStart(2, '0');
+        let minutes = String(now.getMinutes()).padStart(2, '0');
+        let dateStr = `${year}.${month}.${day} ${hours}:${minutes}`;
+
+        let transferDataObj = {
+            date: dateStr,
+            sender: isAnonymous ? "익명" : playerData.name,
+            msg: messageText
+        };
 
         showLoading(true);
         const res = await fetchDB({
-            action: 'transferItem', name: playerData.name, senderRow: playerData.row,
-            senderNewInventory: playerData.inventory, targetName: targetName, itemName: itemToTransfer
+            action: 'transferItem', 
+            name: playerData.name, 
+            senderRow: playerData.row,
+            senderNewInventory: playerData.inventory, 
+            targetName: targetName, 
+            itemName: itemToTransfer,
+            transferData: transferDataObj
         });
         showLoading(false);
 
         if (res && res.success) {
-            alert(`성공.\n[${itemToTransfer}]${getJosa(itemToTransfer, '을/를')} ${targetName} 님에게 양도했습니다.`);
+            alert(`[성공]\n[${itemToTransfer}]${getJosa(itemToTransfer, '을/를')} ${targetName} 님에게 양도했습니다.`);
             buildInventoryUI(); 
         } else {
             alert("양도 실패: " + (res ? res.msg : "서버 오류"));
-            playerData.inventory.splice(currentTransferIndex, 0, itemToTransfer);
+            playerData.inventory.splice(currentTransferIndex, 0, {name: itemToTransfer, date: "", sender: "시스템", msg: "", read: true});
         }
     };
 
-function buildNPCUI() {
+    function buildNPCUI() {
         const listContainer = document.getElementById('npc-list');
         listContainer.innerHTML = '';
         systemData.npcs.forEach(npc => {
@@ -690,7 +833,7 @@ function buildNPCUI() {
                             <span style="color: var(--gold-light); font-weight: bold; font-size:18px;">${item['이름']}</span>
                             <span style="color: var(--gold-main);">${item['가격']} 코인</span>
                         </div>
-                        <div style="margin-bottom: 10px;">${stockHtml}</div>
+                        <div style="margin-bottom: 10px;"></div>
                         <div style="font-size: 14px; color: #ccc; margin-bottom: 15px; min-height: 40px;">${item['효과']}</div>
                     </div>
                     <button class="btn-outline" style="width: 100%; border-color: rgba(255,255,255,0.2);" ${isSoldOut ? 'disabled' : ''} onclick="buyItem('${item['이름']}', ${item['가격']}, '${item['효과']}', ${isLimited}, ${stock})">${isSoldOut ? '품절' : '구매하기'}</button>
@@ -731,7 +874,7 @@ function buildNPCUI() {
         if (playerData.coins < price) return alert("코인이 부족합니다!");
         if(confirm(`[${name}]${getJosa(name, '을/를')} ${price} 코인에 구매하시겠습니까?\n효과: ${effect}`)) {
             playerData.coins -= price;
-            playerData.inventory.push(name);
+            playerData.inventory.push({name: name, date: "", sender: "시스템", msg: "", read: true});
             const success = await savePlayerData("고정구매", `${name} 구매`, isLimited ? name : null);
             if(success) alert(`[시스템] 구매 완료!\n'${name}'${getJosa(name, '이/가')} 소지품에 추가되었습니다.`);
         }
@@ -944,9 +1087,11 @@ function buildNPCUI() {
                 
                 instantHpChange += change;
                 logMsg += `${prefix} [${item['구분']}] ${item['이름']} 획득 -> 즉시 발동! (HP ${change >= 0 ? '+'+change : change})\n`;
-                logArea.innerHTML += `<div style="margin-bottom: 5px;">${prefix} <span style="color: ${change >= 0 ? '#4caf50' : '#f44336'}; font-weight:bold;">[${item['구분']}] ${item['이름']} 즉시 발동!</span></div>`;
+                
+                let hpText = change >= 0 ? `+${change}` : `${change}`;
+                logArea.innerHTML += `<div style="margin-bottom: 5px;">${prefix} <span style="color: ${change >= 0 ? '#4caf50' : '#f44336'}; font-weight:bold;">[${item['구분']}] ${item['이름']} 즉시 발동! (HP ${hpText})</span></div>`;
             } else {
-                playerData.inventory.push(item['이름']);
+                playerData.inventory.push({name: item['이름'], date: "", sender: "시스템", msg: "", read: true});
                 logMsg += `${prefix} [${item['구분']}] ${item['이름']} 획득\n`;
                 logArea.innerHTML += `<div style="margin-bottom: 5px;">${prefix} <span style="color: ${rawColor}; font-weight:bold;">[${item['구분']}] ${item['이름']}</span> 획득</div>`;
             }
@@ -1037,7 +1182,7 @@ function buildNPCUI() {
             let val = document.getElementById(`target-${i}`).value.trim();
             if (val) names.push(val);
         }
-        if (names.length === 0) return alert("대상의 이름을 입력해주세요.");
+        if (names.length === 0) return alert("대상의 이름을 1명 이상 입력해주세요.");
 
         let logResult = "";
         let roll = (sides) => Math.floor(Math.random() * sides) + 1;
@@ -1047,7 +1192,7 @@ function buildNPCUI() {
         let base = 12; let diceSides = 8;
         let dice = roll(diceSides);
         let healAmount = base + dice;
-        logResult = `회복량: ${base} + 1d${diceSides}(${dice}) = 각각 ${healAmount} 회복!\n\n[체력 자동 반영 결과]\n`;
+        logResult = `[생명의 물방울] 회복량: ${base} + 1d${diceSides}(${dice}) = 각각 ${healAmount} 회복!\n\n[체력 자동 반영 결과]\n`;
         
         names.forEach(target => {
             let char = getCharInfo(target);
