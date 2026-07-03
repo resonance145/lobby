@@ -477,7 +477,7 @@
             if(!pw) return alert("비밀번호를 입력해주세요.");
 
             if(!API_URL || API_URL === "") {
-                return alert("[개발자 오류]\nHTML 내부 상단의 API_URL 변수에 웹 앱 URL 주소가 입력되지 않았습니다!");
+                return alert("URL 빠짐");
             }
 
             showLoading(true);
