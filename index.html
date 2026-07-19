@@ -997,7 +997,7 @@
         });
     }
 
-    function buildFixedShopUI() {
+   function buildFixedShopUI() {
         const shopContainer = document.getElementById('shop-fixed-items');
         shopContainer.innerHTML = '';
         systemData.fixedItems.forEach(item => {
@@ -1018,7 +1018,8 @@
                             <span style="color: var(--gold-light); font-weight: bold; font-size:18px;">${item['이름']}</span>
                             <span style="color: var(--gold-main);">${item['가격']} 코인</span>
                         </div>
-                        <div style="margin-bottom: 10px;"></div>
+                        <div style="margin-bottom: 10px;">${stockHtml}</div>
+                        
                         <div style="font-size: 14px; color: #ccc; margin-bottom: 15px; min-height: 40px;">${item['효과']}</div>
                     </div>
                     <button class="btn-outline" style="width: 100%; border-color: rgba(255,255,255,0.2);" ${isSoldOut ? 'disabled' : ''} onclick="buyItem('${item['이름']}', ${item['가격']}, '${item['효과']}', ${isLimited}, ${stock})">${isSoldOut ? '품절' : '구매하기'}</button>
