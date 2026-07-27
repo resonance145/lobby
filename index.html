@@ -1040,13 +1040,18 @@
         }
     };
 
-    function buildNPCUI() {
+function buildNPCUI() {
         const listContainer = document.getElementById('npc-list');
         listContainer.innerHTML = '';
         systemData.npcs.forEach(npc => {
             let bgImage = npc['이미지링크'] ? `url('${npc['이미지링크']}')` : '#222';
+            
+            let linkTarget = npc['연결화면'] ? npc['연결화면'].toString().trim() : '';
+          
+            let clickAction = linkTarget === '' ? `alert('추후 공개됩니다.')` : `nav('${linkTarget}', '${npc['이름']}')`;
+            
             listContainer.innerHTML += `
-                <div class="char-card-v2" style="background-image: ${bgImage};" onclick="nav('${npc['연결화면']}', '${npc['이름']}')">
+                <div class="char-card-v2" style="background-image: ${bgImage};" onclick="${clickAction}">
                     <div class="char-details">
                         <h2 style="margin: 0; color: var(--gold-light); font-family: var(--font-serif); font-size: 26px;">${npc['이름']}</h2>
                         <div style="font-size: 13px; letter-spacing: 1px; margin-bottom: 5px; color:#aaa;">${npc['역할']}</div>
