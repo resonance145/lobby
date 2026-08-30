@@ -103,6 +103,16 @@
         .option-flex { display: flex; gap: 15px; margin-bottom: 5px; }
         .option-label { display: flex; align-items: center; gap: 6px; color: #ddd; font-size: 14px; cursor: pointer; }
         .option-label input { cursor: pointer; accent-color: var(--gold-main); }
+
+        /* 커스텀 프로필 뷰어 스타일 */
+        .community-theme { line-height: 1.6; font-size: 15px; padding: 25px; background: rgba(15, 14, 18, 0.7); border-radius: 12px; border: 1px solid rgba(140, 112, 59, 0.2); min-height: 500px; box-shadow: inset 0 0 15px rgba(0,0,0,0.3); color: var(--text-main); overflow-y: auto; }
+        .community-theme p { margin-top: 0; margin-bottom: 14px; word-break: keep-all; min-height: 1em; }
+        .community-theme strong, .community-theme b { color: var(--gold-light); font-weight: bold; }
+        .community-theme h1, .community-theme h2, .community-theme h3 { color: var(--gold-main); border-bottom: 1px dashed rgba(140, 112, 59, 0.4); padding-bottom: 8px; margin-top: 30px; margin-bottom: 15px; font-family: var(--font-serif); }
+        .community-theme table { width: 100% !important; border-collapse: collapse; margin: 25px 0; background: rgba(0, 0, 0, 0.2); }
+        .community-theme td, .community-theme th { border: 1px solid rgba(140, 112, 59, 0.3) !important; padding: 12px; font-size: 14px; }
+        .community-theme tr:first-child td, .community-theme tr:first-child th { background-color: rgba(212, 178, 111, 0.08) !important; color: var(--gold-light) !important; font-weight: bold; }
+        .community-theme img { max-width: 100% !important; height: auto !important; border-radius: 8px; display: block; margin: 15px auto; }
     </style>
 </head>
 <body>
@@ -323,7 +333,7 @@
         <div id="notice-list" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;"></div>
     </div>
 
-    <!-- ⭐ 우측 하단 플로팅 버튼 (로비에서만 뜹니다) -->
+    <!-- 우측 하단 플로팅 버튼 (로비에서만 나타남) -->
     <button id="btn-floating-guest" onclick="openGuestList()">투숙객 명단</button>
 
     <div id="view-guest-list" class="view">
@@ -331,21 +341,56 @@
         <div id="guest-list-container" class="guest-grid"></div>
     </div>
 
-    <div id="view-doc" class="view" style="padding: 0; flex-direction: column;">
-        <div style="background: rgba(0,0,0,0.5); padding: 15px 30px; border-bottom: 1px solid var(--gold-dark); display: flex; justify-content: space-between; align-items: center;">
-            <span style="color: var(--gold-light); font-family: var(--font-serif); font-size: 18px; font-weight: bold;">📄 PROFILE DATA</span>
-            <a id="doc-new-window" href="#" target="_blank" style="color: var(--text-sub); font-size: 13px; text-decoration: none; border: 1px solid var(--text-sub); padding: 4px 10px; border-radius: 4px;">새 창으로 열기 ↗</a>
+    <div id="view-doc" class="view" style="padding: 20px 40px; box-sizing: border-box;">
+        <div class="profile-split-container" style="display:flex; gap:40px; align-items:flex-start; height:100%;">
+            <div class="profile-left-panel" style="flex:0 0 240px; display:flex; flex-direction:column; gap:20px;">
+                <div class="detail-card-frame" style="width:100%; aspect-ratio:2/3; border:2px solid var(--gold-main); border-radius:12px; overflow:hidden; background:#111014; display:flex; justify-content:center; align-items:center;">
+                    <span id="doc-ui-noimg" style="color:var(--gold-dark); font-family:var(--font-serif); font-size:14px; display:none;">NO IMAGE</span>
+                    <img id="doc-ui-img" src="" style="width:100%; height:100%; object-fit:cover;">
+                </div>
+                <div class="status-dashboard" style="background:rgba(15,14,18,0.7); border:1px solid var(--gold-dark); border-radius:8px; padding:20px; display:flex; flex-direction:column; gap:12px;">
+                    <div style="color:var(--text-sub); display:flex; justify-content:space-between; border-bottom:1px solid rgba(140,112,59,0.2); padding-bottom:6px;"><span>체력</span><b id="doc-ui-hp" style="color:var(--gold-main);">0</b></div>
+                    <div style="color:var(--text-sub); display:flex; justify-content:space-between; border-bottom:1px solid rgba(140,112,59,0.2); padding-bottom:6px;"><span>힘</span><b id="doc-ui-str" style="color:var(--gold-main);">0</b></div>
+                    <div style="color:var(--text-sub); display:flex; justify-content:space-between; border-bottom:1px solid rgba(140,112,59,0.2); padding-bottom:6px;"><span>민첩</span><b id="doc-ui-dex" style="color:var(--gold-main);">0</b></div>
+                    <div style="color:var(--text-sub); display:flex; justify-content:space-between; border-bottom:1px solid rgba(140,112,59,0.2); padding-bottom:6px;"><span>운</span><b id="doc-ui-luk" style="color:var(--gold-main);">0</b></div>
+                </div>
+            </div>
+            
+            <div class="profile-right-panel" style="flex:1; display:flex; flex-direction:column; gap:20px; height:100%; min-width:0;">
+                <div class="right-header" style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--gold-dark); padding-bottom:15px;">
+                    <h2 id="doc-ui-name" style="font-family:var(--font-serif); color:var(--gold-light); margin:0; font-size:32px;">Name</h2>
+                    <a id="doc-new-window" href="#" target="_blank" style="color:var(--gold-light); font-size:13px; text-decoration:none; border:1px solid var(--gold-dark); padding:6px 12px; border-radius:4px;">새 창으로 열기 ↗</a>
+                </div>
+
+                <div id="profile-doc-container" class="community-theme"></div>
+            </div>
         </div>
-        <iframe id="doc-iframe" style="width: 100%; flex: 1; border: none; background: #fff; min-height: 500px;"></iframe>
     </div>
 
 </div>
 
 <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbzEO9cbWDMh6I1cf85nWjOn1psqYohENUWihxbmVGs26yTeSliKYHHo7ljJl0aW3D4L/exec"; 
+    const PROFILE_GAS_URL = "https://script.google.com/macros/s/AKfycbyclorIRKe89mtUzhiUook0RwiENNMxVMp7tI5ZvKwJhOMzW3Vny23S_XbEl3MH0zZ2fQ/exec"; 
 
     let playerData = null;
     let systemData = null; 
+
+    function isColorful(colorStr) {
+        if (!colorStr) return false;
+        let c = colorStr.toLowerCase().replace(/\s/g, '');
+        if (c === 'transparent' || c === 'inherit') return false;
+        let r = 0, g = 0, b = 0;
+        if (c.startsWith('rgb')) {
+            let match = c.match(/rgba?\((\d+),(\d+),(\d+)/);
+            if (match) { r = parseInt(match[1]); g = parseInt(match[2]); b = parseInt(match[3]); }
+        } else if (c.startsWith('#')) {
+            let hex = c.substring(1);
+            if (hex.length === 3) { r = parseInt(hex[0]+hex[0], 16); g = parseInt(hex[1]+hex[1], 16); b = parseInt(hex[2]+hex[2], 16); }
+            else if (hex.length >= 6) { r = parseInt(hex.substring(0,2), 16); g = parseInt(hex.substring(2,4), 16); b = parseInt(hex.substring(4,6), 16); }
+        }
+        return (Math.max(r, g, b) - Math.min(r, g, b) > 30);
+    }
 
     function countTickets() {
         if(!playerData || !playerData.inventory) return 0;
@@ -485,7 +530,8 @@
                 str: g['힘'] || 0, dex: g['민첩'] || 0, luk: g['운'] || 0,
                 link: g['프로필 링크'] || '',
                 hp: charData ? charData.hp : 0,
-                maxHp: charData ? charData.maxHp : 1
+                maxHp: charData ? charData.maxHp : 1,
+                status: charData ? (charData.status || '') : ''
             };
         });
 
@@ -495,15 +541,22 @@
             let hpPercent = Math.max(0, Math.min(100, (g.hp / g.maxHp) * 100));
             
             let hpColor = '';
-            if (hpPercent >= 50) {
-                hpColor = 'linear-gradient(90deg, #4caf50, #81c784)'; // 초록
-            } else if (hpPercent >= 25) {
-                hpColor = 'linear-gradient(90deg, #ffc107, #ffd54f)'; // 노랑
-            } else {
-                hpColor = 'linear-gradient(90deg, #f44336, #e57373)'; // 빨강
-            }
+            if (hpPercent >= 50) hpColor = 'linear-gradient(90deg, #4caf50, #81c784)';
+            else if (hpPercent >= 25) hpColor = 'linear-gradient(90deg, #ffc107, #ffd54f)';
+            else hpColor = 'linear-gradient(90deg, #f44336, #e57373)';
 
             let imgTag = g.img ? `<img src="${g.img}" class="guest-img">` : `<div class="guest-img" style="display:flex; justify-content:center; align-items:center; color:#555;">No Image</div>`;
+            
+            let statusBadge = '';
+            if (g.status) {
+                let bg = '#666';
+                if (g.status === '독' || g.status === '맹독') bg = '#9141CB';
+                else if (g.status === '화상') bg = '#E62829';
+                else if (g.status === '마비') bg = '#FAC000';
+                else if (g.status === '잠듦') bg = '#ADD2F5';
+                else if (g.status === '얼음') bg = '#3DCEF3';
+                statusBadge = `<span style="background:${bg}; color:#fff; font-size:11px; padding:2px 6px; border-radius:8px; margin-left:6px; font-weight:bold;">${g.status}</span>`;
+            }
             
             container.innerHTML += `
                 <div class="guest-card">
@@ -511,33 +564,131 @@
                     <h3 style="color:var(--gold-light); margin:0 0 2px 0; font-size:22px; font-family:var(--font-serif);">${g.name}</h3>
                     <div style="font-size:11px; color:rgba(255,255,255,0.4); margin-bottom:12px;">시트 기재 이름 : ${g.sheetName}</div>
                     
-                    <div style="font-size:12px; color:#fff; text-align:left; font-weight:bold; margin-bottom:5px;">
-                        <span style="color:var(--gold-main);">HP</span> ${g.hp} / ${g.maxHp}
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                        <div style="font-size:12px; color:#fff; font-weight:bold; display:flex; align-items:center;">
+                            <span style="color:var(--gold-main); margin-right:4px;">HP</span> ${g.hp} / ${g.maxHp}
+                            ${statusBadge}
+                        </div>
+                        <button title="프로필 열람" class="btn-outline" style="padding: 2px 10px; font-size:12px; border-color:var(--gold-main); color:var(--gold-light); border-radius:4px; height:24px; line-height:1;" onclick="openDocView('${g.link}', '${g.name}', '${g.img || ''}', ${g.hp}, ${g.maxHp}, ${g.str}, ${g.dex}, ${g.luk})">▶</button>
                     </div>
                     <div class="guest-hp-bar">
                         <div class="guest-hp-fill" style="width:${hpPercent}%; background:${hpColor};"></div>
                     </div>
                     
-                    <div class="guest-stats">
+                    <div class="guest-stats" style="margin-bottom: 0;">
                         <span><span style="color:var(--gold-main);">힘</span> ${g.str}</span>
                         <span><span style="color:var(--gold-main);">민첩</span> ${g.dex}</span>
                         <span><span style="color:var(--gold-main);">운</span> ${g.luk}</span>
-                    </div>
-                    
-                    <div style="text-align: right; margin-top: auto; padding-top: 5px;">
-                        <button class="btn-outline" style="font-size:11px; padding:5px 12px; border-color:var(--gold-main); color:var(--gold-light); border-radius: 20px;" onclick="openDocView('${g.link}')">프로필 열람</button>
                     </div>
                 </div>
             `;
         });
     }
 
-    function openDocView(link) {
+    async function openDocView(link, name, img, hp, maxHp, str, dex, luk) {
         if(!link || link.trim() === '') return alert('등록된 링크가 없습니다.');
-        let embedLink = link.replace('/edit', '/preview'); 
-        document.getElementById('doc-iframe').src = embedLink;
+        
+        document.getElementById('doc-ui-name').innerText = name;
+        document.getElementById('doc-ui-hp').innerText = `${hp} / ${maxHp}`;
+        document.getElementById('doc-ui-str').innerText = str;
+        document.getElementById('doc-ui-dex').innerText = dex;
+        document.getElementById('doc-ui-luk').innerText = luk;
+        
+        const imgEl = document.getElementById('doc-ui-img');
+        const noImgEl = document.getElementById('doc-ui-noimg');
+        
+        if(img && img !== 'undefined' && img !== 'null') {
+            imgEl.src = img; imgEl.style.display = 'block'; noImgEl.style.display = 'none';
+        } else {
+            imgEl.style.display = 'none'; noImgEl.style.display = 'block';
+        }
+
         document.getElementById('doc-new-window').href = link;
+        const container = document.getElementById('profile-doc-container');
+        container.innerHTML = "<p style='text-align:center; color: var(--text-sub); margin-top:50px;'>문서를 불러오는 중...</p>";
         nav('doc', '프로필 열람');
+
+        if (!PROFILE_GAS_URL) {
+            container.innerHTML = "<p style='text-align:center; color:#ff6b6b; margin-top:50px;'>PROFILE_GAS_URL이 설정되지 않았습니다.</p>";
+            return;
+        }
+
+        try {
+            const response = await fetch(`${PROFILE_GAS_URL}?url=${encodeURIComponent(link)}`);
+            const data = await response.json();
+            
+            if (data.error) {
+                container.innerHTML = `<p style="color:#ff6b6b; text-align:center; margin-top:50px;">${data.error}</p>`;
+                return;
+            }
+            
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(data.html, 'text/html');
+            const styleMap = {};
+
+            doc.querySelectorAll('style').forEach(styleTag => {
+                const classBlockRegex = /\.([a-zA-Z0-9_-]+)\s*\{([^}]+)\}/gi;
+                let blockMatch;
+                while ((blockMatch = classBlockRegex.exec(styleTag.innerHTML)) !== null) {
+                    let className = blockMatch[1];
+                    let rules = blockMatch[2];
+                    if (!styleMap[className]) styleMap[className] = {};
+                    
+                    let alignMatch = rules.match(/text-align:\s*(center|right|justify)/i);
+                    if (alignMatch) styleMap[className].textAlign = alignMatch[1];
+                    if (/font-weight:\s*(700|bold)/i.test(rules)) styleMap[className].fontWeight = 'bold';
+                    
+                    let bgMatch = rules.match(/background(?:-color)?:\s*([^;}!]+)/i);
+                    if (bgMatch) {
+                        let color = bgMatch[1].trim().toLowerCase();
+                        if (color !== '#ffffff' && color !== '#fff' && color !== 'transparent' && !color.includes('255, 255, 255')) {
+                            styleMap[className].isHighlight = true;
+                        }
+                    }
+                    
+                    let colorMatch = rules.match(/(?:^|[;\s])color:\s*([^;}!]+)/i);
+                    if (colorMatch && isColorful(colorMatch[1].trim())) styleMap[className].isPointColor = true;
+                }
+            });
+
+            doc.querySelectorAll('body *').forEach(el => {
+                let align = el.style.textAlign;
+                let bold = (el.style.fontWeight === '700' || el.style.fontWeight === 'bold') ? 'bold' : '';
+                let isHighlight = false, isPointColor = false;
+
+                let inlineBg = el.style.backgroundColor ? el.style.backgroundColor.toLowerCase() : '';
+                if (inlineBg && inlineBg !== 'transparent' && inlineBg !== 'rgb(255, 255, 255)' && inlineBg !== '#ffffff') isHighlight = true;
+                if (el.style.color && isColorful(el.style.color)) isPointColor = true;
+
+                el.classList.forEach(cls => {
+                    if (styleMap[cls]) {
+                        if (styleMap[cls].textAlign) align = styleMap[cls].textAlign;
+                        if (styleMap[cls].fontWeight) bold = styleMap[cls].fontWeight;
+                        if (styleMap[cls].isHighlight) isHighlight = true;
+                        if (styleMap[cls].isPointColor) isPointColor = true;
+                    }
+                });
+
+                el.removeAttribute('style'); el.removeAttribute('class');
+                if (align) el.style.textAlign = align;
+                if (bold) el.style.fontWeight = bold;
+                
+                if (isHighlight) {
+                    el.style.backgroundColor = 'rgba(212, 178, 111, 0.25)';
+                    if (el.tagName.toLowerCase() === 'span') {
+                        el.style.padding = '2px 6px'; el.style.borderRadius = '4px';
+                        el.style.color = isPointColor ? '#ffb703' : 'var(--gold-light)';
+                        if (isPointColor) el.style.fontWeight = 'bold';
+                    }
+                } else if (isPointColor) {
+                    el.style.color = '#ffb703'; el.style.fontWeight = 'bold';
+                }
+            });
+
+            container.innerHTML = doc.body.innerHTML;
+        } catch (error) {
+            container.innerHTML = "<p style='text-align:center; color:#ff6b6b; margin-top:50px;'>서버 연결에 실패했습니다.</p>";
+        }
     }
 
     function switchShopTab(type) {
