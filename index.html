@@ -129,6 +129,11 @@
         </div>
     </div>
 
+    <div class="resource-item inv-btn" onclick="openGuestList()" style="padding: 5px 20px; font-weight: bold; border-color: var(--gold-main); color: var(--gold-light);">투숙객 명단</div>
+    
+    <div class="resource-item inv-btn" onclick="openInventoryView()">소지품 <span id="ui-inv-alert" class="alert-badge" style="display:none;">!</span></div>
+</div>
+    
     <div id="modal-letter-overlay" class="modal-overlay">
         <div class="modal-box" style="width: 380px;">
             <div style="font-size: 36px; margin-bottom: 10px;">✉️</div>
@@ -334,8 +339,6 @@
     </div>
 </div>
 
-    <button id="btn-floating-guest" class="btn-primary" onclick="openGuestList()">투숙객 명단</button>
-
     <div id="view-guest-list" class="view">
         <h3 style="color: var(--gold-light); font-size: 26px; margin-top: 0; font-family: var(--font-serif); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">투숙객 명단</h3>
         <div id="guest-list-container" class="guest-grid"></div>
@@ -435,7 +438,7 @@
         navUIOnly(viewId, title);
     }
 
-    function navUIOnly(viewId, title = '') {
+function navUIOnly(viewId, title = '') {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         const targetView = document.getElementById('view-' + viewId);
         if(targetView) targetView.classList.add('active');
@@ -443,6 +446,9 @@
         const backBtn = document.getElementById('btn-back');
         const titleEl = document.getElementById('page-title');
         
+        backBtn.onclick = () => nav('lobby'); 
+        backBtn.innerText = '◀ 로비로';
+
         if(viewId === 'lobby') {
             backBtn.style.display = 'none';
             titleEl.innerText = '✦ CHARACTER LIST ✦';
@@ -452,12 +458,17 @@
         } else {
             backBtn.style.display = 'block';
             titleEl.innerText = title ? `✦ ${title} ✦` : '✦ SYSTEM ✦';
+            
+            if (viewId === 'doc') {
+                backBtn.innerText = '◀ 명단으로';
+                backBtn.onclick = () => nav('guest-list', '투숙객 명단');
+            }
         }
         
         if(viewId === 'inventory') buildInventoryUI();
         if(viewId === 'shop') updateLimitedGachaUI(); 
     }
-
+    
     function openInventoryView() {
         document.getElementById('ui-inv-alert').style.display = 'none';
         nav('inventory', '내 소지품');
