@@ -16,7 +16,7 @@
         .game-container { width: 100%; max-width: 1200px; height: 90vh; max-height: 800px; position: relative; box-shadow: 0 0 50px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; background-color: var(--bg-color); }
         
         #loading-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; display: none; justify-content: center; align-items: center; color: var(--gold-main); font-size: 24px; font-family: var(--font-serif); }
-        .view { display: none; flex: 1; padding: 20px 40px; overflow-y: auto; }
+        .view { display: none; flex: 1; padding: 20px 40px; overflow-y: auto; width: 100%; box-sizing: border-box; }
         .view.active { display: flex; flex-direction: column; animation: fadeIn 0.4s; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
         
@@ -47,6 +47,14 @@
         .btn-cancel:hover { background: #555; }
         
         .btn-ticket { background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%) !important; color: #fff !important; border: 1px solid #4caf50 !important; box-shadow: 0 0 15px rgba(76, 175, 80, 0.5) !important; }
+
+        .guest-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 20px; padding: 20px 0; width: 100%; box-sizing: border-box; align-items: stretch; }
+        .guest-card { background: rgba(0,0,0,0.6); border: 1px solid var(--gold-dark); border-radius: 12px; padding: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: 0.3s; display: flex; flex-direction: column; }
+        .guest-card:hover { border-color: var(--gold-light); transform: translateY(-5px); }
+        .guest-img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 10px; background: #222; }
+        .guest-hp-bar { width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 4px; overflow: hidden; margin-top: 5px; margin-bottom: 12px; box-shadow: inset 0 0 5px #000; }
+        .guest-hp-fill { background: linear-gradient(90deg, #ff3333, #ff7777); height: 100%; transition: width 0.3s; }
+        .guest-stats { display: flex; justify-content: space-around; color: #ddd; font-size: 13px; margin: 10px 0 15px 0; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px; border: 1px dashed var(--gold-dark); font-weight: bold; }
 
         .char-list { display: flex; gap: 30px; justify-content: center; margin-top: 50px; flex-wrap: wrap;}
         .char-card-v2 { width: 260px; height: 380px; background-size: cover; background-position: center; border-radius: 12px; cursor: pointer; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; transition: 0.3s; position: relative; border: 1px solid var(--gold-dark); box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); }
@@ -83,12 +91,7 @@
         
         .gacha-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(130px, 1fr)); gap:10px; width:100%; max-height:280px; overflow-y:auto; padding:10px; box-sizing:border-box; }
 
-        #gacha-quote {
-            font-size: 16px; color: #fff; font-style: italic; margin: 20px auto; max-width: 600px; 
-            line-height: 1.8; font-weight: 500; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--gold-dark); 
-            border-radius: 10px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            position: relative; border-left: 4px solid var(--gold-main); display: none; white-space: pre-wrap;
-        }
+        #gacha-quote { font-size: 16px; color: #fff; font-style: italic; margin: 20px auto; max-width: 600px; line-height: 1.8; font-weight: 500; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--gold-dark); border-radius: 10px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); position: relative; border-left: 4px solid var(--gold-main); display: none; white-space: pre-wrap; }
         
         .heal-input { width: 100%; padding: 12px; background: rgba(0,0,0,0.5); border: 1px solid var(--text-sub); color: #fff; border-radius: 4px; box-sizing: border-box; margin-bottom: 12px; font-size: 15px; text-align: center;}
         .heal-input:focus { outline: none; border-color: var(--gold-main); background: rgba(0,0,0,0.8); }
@@ -98,15 +101,6 @@
         .option-flex { display: flex; gap: 15px; margin-bottom: 5px; }
         .option-label { display: flex; align-items: center; gap: 6px; color: #ddd; font-size: 14px; cursor: pointer; }
         .option-label input { cursor: pointer; accent-color: var(--gold-main); }
-        
-        .guest-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; padding: 20px 0; }
-        .guest-card { background: rgba(0,0,0,0.6); border: 1px solid var(--gold-dark); border-radius: 12px; padding: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: 0.3s; }
-        .guest-card:hover { border-color: var(--gold-light); transform: translateY(-5px); }
-        .guest-img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 10px; background: #222; }
-        .guest-hp-bar { width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 4px; overflow: hidden; margin-top: 5px; margin-bottom: 12px; box-shadow: inset 0 0 5px #000; }
-        .guest-hp-fill { background: linear-gradient(90deg, #ff3333, #ff7777); height: 100%; transition: width 0.3s; }
-        .guest-stats { display: flex; justify-content: space-around; color: #ddd; font-size: 13px; margin: 10px 0; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px; border: 1px dashed var(--gold-dark); font-weight: bold; }
-        #btn-floating-guest { position: absolute; bottom: 30px; right: 30px; z-index: 50; display: none; padding: 12px 25px; border-radius: 30px; font-size: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.6); }
     </style>
 </head>
 <body>
@@ -125,15 +119,12 @@
                 <span id="ui-status" style="display:none; padding:2px 8px; border-radius:12px; margin-left:8px; font-weight:bold; font-size:12px; color:#fff;"></span>
             </div>
             <div class="resource-item">💰 <span id="ui-coins">0</span> 코인</div>
+            <div class="resource-item inv-btn" onclick="openGuestList()" style="padding: 5px 20px; font-weight: bold; border-color: var(--gold-main); color: var(--gold-light);">투숙객 명단</div>
             <div class="resource-item inv-btn" onclick="openInventoryView()">소지품 <span id="ui-inv-alert" class="alert-badge" style="display:none;">!</span></div>
         </div>
     </div>
-
-    <div class="resource-item inv-btn" onclick="openGuestList()" style="padding: 5px 20px; font-weight: bold; border-color: var(--gold-main); color: var(--gold-light);">투숙객 명단</div>
     
-    <div class="resource-item inv-btn" onclick="openInventoryView()">소지품 <span id="ui-inv-alert" class="alert-badge" style="display:none;">!</span></div>
-</div>
-    
+    <!-- 모달 오버레이들 -->
     <div id="modal-letter-overlay" class="modal-overlay">
         <div class="modal-box" style="width: 380px;">
             <div style="font-size: 36px; margin-bottom: 10px;">✉️</div>
@@ -182,9 +173,7 @@
         <div class="modal-box" style="width: 380px;">
             <h3 id="modal-transfer-item-name" style="color: var(--gold-light); font-size: 22px; margin-top:0;">아이템 이름</h3>
             <p style="color: #fff; font-size: 15px; margin-bottom: 15px;">아이템을 양도할 대상을 지정하고 설정을 선택하세요.</p>
-            
             <input type="text" id="transfer-target-name" placeholder="수령자 이름" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.5); border: 1px solid var(--text-sub); color: #fff; text-align: center; margin-bottom: 15px; box-sizing: border-box; font-size: 15px; border-radius: 4px;">
-            
             <div class="option-group-box">
                 <span class="option-title">발송인 표시 설정</span>
                 <div class="option-flex">
@@ -192,7 +181,6 @@
                     <label class="option-label"><input type="radio" name="ts-sender" value="anonymous"> 익명</label>
                 </div>
             </div>
-
             <div class="option-group-box">
                 <span class="option-title">메시지 첨부 설정</span>
                 <div class="option-flex">
@@ -201,7 +189,6 @@
                 </div>
                 <textarea id="transfer-msg-input" placeholder="전달할 메시지를 입력해 주세요." style="width:100%; height:70px; margin-top:10px; background:rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:4px; padding:8px; box-sizing:border-box; font-size:13px; resize:none; display:none;"></textarea>
             </div>
-
             <p style="color: var(--text-sub); font-size: 12px; margin-top: 0;">※ 양도 완료 시 본인의 소지품에서 사라집니다.</p>
             <div style="display: flex; gap: 10px; margin-top: 15px;">
                 <button class="btn-primary" id="btn-confirm-transfer">양도하기</button>
@@ -214,10 +201,8 @@
         <div class="modal-box" style="width: 380px;">
             <h3 style="color: var(--gold-light); font-size: 22px; margin-top:0;">코인 양도</h3>
             <p style="color: #fff; font-size: 14px; margin-bottom: 20px;">누구에게 얼마를 양도하시겠습니까?</p>
-            
             <input type="text" id="ct-target-name" placeholder="수령자 이름" class="heal-input" style="margin-bottom: 10px;">
             <input type="number" id="ct-amount" placeholder="양도할 금액" class="heal-input" min="1" style="margin-bottom: 15px;">
-            
             <div class="option-group-box">
                 <span class="option-title">발송인 표시 설정</span>
                 <div class="option-flex">
@@ -225,7 +210,6 @@
                     <label class="option-label"><input type="radio" name="ct-sender" value="anonymous"> 익명</label>
                 </div>
             </div>
-
             <div class="option-group-box">
                 <span class="option-title">메시지 첨부 설정</span>
                 <div class="option-flex">
@@ -234,8 +218,7 @@
                 </div>
                 <textarea id="ct-msg-input" placeholder="전달할 메시지를 입력해 주세요." style="width:100%; height:70px; margin-top:10px; background:rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:4px; padding:8px; box-sizing:border-box; font-size:13px; resize:none; display:none;"></textarea>
             </div>
-            
-            <p style="color: var(--text-sub); font-size: 12px; margin-top: 5px; margin-bottom: 0;">※ 양도 시 아이템 형태로 상대방의 소지품에 발송되며, 상대방이 '사용'해야 코인이 지급됩니다.</p>
+            <p style="color: var(--text-sub); font-size: 12px; margin-top: 5px; margin-bottom: 0;">※ 양도 시 아이템 형태로 발송되며, 상대방이 '사용'해야 코인이 지급됩니다.</p>
             <div style="display: flex; gap: 10px; margin-top: 20px;">
                 <button class="btn-primary" onclick="confirmCoinTransfer()">양도하기</button>
                 <button class="btn-primary btn-cancel" onclick="closeCoinTransferModal()">취소</button>
@@ -243,6 +226,7 @@
         </div>
     </div>
 
+    <!-- 화면 뷰들 -->
     <div id="view-login" class="view active" style="justify-content: center;">
         <div class="login-box">
             <h2 style="color: var(--gold-light); font-family: var(--font-serif); margin-bottom: 30px;">ACCESS CODE</h2>
@@ -337,23 +321,22 @@
         </div>
         <div id="notice-list" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;"></div>
     </div>
-</div>
 
     <div id="view-guest-list" class="view">
         <h3 style="color: var(--gold-light); font-size: 26px; margin-top: 0; font-family: var(--font-serif); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">투숙객 명단</h3>
         <div id="guest-list-container" class="guest-grid"></div>
     </div>
 
-    <div id="modal-doc-overlay" class="modal-overlay">
-        <div class="modal-box" style="width: 90%; max-width: 800px; height: 80vh; padding: 0; display: flex; flex-direction: column; overflow: hidden;">
-            <div style="background: var(--panel-bg); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold-dark);">
-                <span style="color: var(--gold-light); font-family: var(--font-serif); font-size: 18px;">PROFILE DATA</span>
-                <button class="btn-cancel" style="padding: 5px 15px; border-radius: 4px;" onclick="closeDocModal()">닫기</button>
-            </div>
-            <iframe id="doc-iframe" style="width: 100%; flex: 1; border: none; background: #fff;"></iframe>
+    <div id="view-doc" class="view" style="padding: 0; flex-direction: column;">
+        <div style="background: rgba(0,0,0,0.5); padding: 15px 30px; border-bottom: 1px solid var(--gold-dark); display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: var(--gold-light); font-family: var(--font-serif); font-size: 18px; font-weight: bold;">📄 PROFILE DATA</span>
+            <a id="doc-new-window" href="#" target="_blank" style="color: var(--text-sub); font-size: 13px; text-decoration: none; border: 1px solid var(--text-sub); padding: 4px 10px; border-radius: 4px;">새 창으로 열기 ↗</a>
         </div>
+        <iframe id="doc-iframe" style="width: 100%; flex: 1; border: none; background: #fff; min-height: 500px;"></iframe>
     </div>
-    
+
+</div>
+
 <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbzEO9cbWDMh6I1cf85nWjOn1psqYohENUWihxbmVGs26yTeSliKYHHo7ljJl0aW3D4L/exec"; 
 
@@ -438,7 +421,7 @@
         navUIOnly(viewId, title);
     }
 
-function navUIOnly(viewId, title = '') {
+    function navUIOnly(viewId, title = '') {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         const targetView = document.getElementById('view-' + viewId);
         if(targetView) targetView.classList.add('active');
@@ -472,6 +455,65 @@ function navUIOnly(viewId, title = '') {
     function openInventoryView() {
         document.getElementById('ui-inv-alert').style.display = 'none';
         nav('inventory', '내 소지품');
+    }
+
+    function openGuestList() {
+        nav('guest-list', '투숙객 명단');
+        const container = document.getElementById('guest-list-container');
+        container.innerHTML = '';
+        
+        if(!systemData.guests || systemData.guests.length === 0) {
+            container.innerHTML = '<p style="color:var(--text-sub);">명단이 아직 등록되지 않았습니다.</p>'; 
+            return;
+        }
+
+        let merged = systemData.guests.map(g => {
+            let sheetName = g['시트 기재 이름'] || g['이름'];
+            let charData = systemData.allCharacters.find(c => c.name === sheetName);
+            return {
+                name: g['이름'],
+                sheetName: sheetName,
+                img: g['프로필 사진'],
+                str: g['힘'] || 0, dex: g['민첩'] || 0, luk: g['운'] || 0,
+                link: g['프로필 링크'] || '',
+                hp: charData ? charData.hp : 0,
+                maxHp: charData ? charData.maxHp : 1
+            };
+        });
+
+        merged.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+
+        merged.forEach(g => {
+            let hpPercent = Math.max(0, Math.min(100, (g.hp / g.maxHp) * 100));
+            let imgTag = g.img ? `<img src="${g.img}" class="guest-img">` : `<div class="guest-img" style="display:flex; justify-content:center; align-items:center; color:#555;">No Image</div>`;
+            
+            container.innerHTML += `
+                <div class="guest-card">
+                    ${imgTag}
+                    <h3 style="color:var(--gold-light); margin:0 0 2px 0; font-size:22px; font-family:var(--font-serif);">${g.name}</h3>
+                    <div style="font-size:11px; color:rgba(255,255,255,0.4); margin-bottom:12px;">시트 기재 이름 : ${g.sheetName}</div>
+                    
+                    <div style="font-size:12px; color:#fff; text-align:left; font-weight:bold;">❤️ HP: ${g.hp} / ${g.maxHp}</div>
+                    <div class="guest-hp-bar"><div class="guest-hp-fill" style="width:${hpPercent}%"></div></div>
+                    
+                    <div class="guest-stats">
+                        <span>💪 ${g.str}</span>
+                        <span>⚡ ${g.dex}</span>
+                        <span>🍀 ${g.luk}</span>
+                    </div>
+                    
+                    <button class="btn-outline" style="width:100%; font-size:13px; padding:8px; margin-top:auto; border-color:var(--gold-main); color:var(--gold-light);" onclick="openDocView('${g.link}')">프로필 열람</button>
+                </div>
+            `;
+        });
+    }
+
+    function openDocView(link) {
+        if(!link || link.trim() === '') return alert('등록된 링크가 없습니다.');
+        let embedLink = link.replace('/edit', '/preview'); 
+        document.getElementById('doc-iframe').src = embedLink;
+        document.getElementById('doc-new-window').href = link;
+        nav('doc', '프로필 열람');
     }
 
     function switchShopTab(type) {
@@ -572,7 +614,7 @@ function navUIOnly(viewId, title = '') {
             if(!pw) return alert("비밀번호를 입력해주세요.");
 
             if(!API_URL || API_URL === "") {
-                return alert("URL 주소 없음");
+                return alert("HTML 상단의 API_URL을 입력해주세요.");
             }
 
             showLoading(true);
@@ -706,7 +748,6 @@ function navUIOnly(viewId, title = '') {
 
             list.innerHTML += `
                 <div class="item-card">
-                    <!-- 삭제 버튼 추가 -->
                     <div class="item-delete-btn" onclick="openDeleteModal(${index}, '${itemName}')" title="삭제하기">✖</div>
                     
                     ${metaHtml}
@@ -891,7 +932,6 @@ function navUIOnly(viewId, title = '') {
                     let val = t.match(/\[상태이상해제:(.+?)\]/)[1];
                     effectDescs.push(`자신에게 걸린 '${val}' 상태이상을 치료합니다.`);
                 }
-
                 else if (t.startsWith('[코인획득:')) {
                     let val = t.match(/\[코인획득:(.+?)\]/)[1];
                     effectDescs.push(`사용 시 ${val} 코인을 획득합니다.`);
@@ -956,7 +996,6 @@ function navUIOnly(viewId, title = '') {
                         newStatus = "";
                     }
                 }
-
                 else if (t.startsWith('[코인획득:')) {
                     let valStr = t.match(/\[코인획득:(.+?)\]/)[1];
                     let gainedCoins = parseInt(valStr);
@@ -1067,14 +1106,12 @@ function navUIOnly(viewId, title = '') {
         }
     };
 
-function buildNPCUI() {
+    function buildNPCUI() {
         const listContainer = document.getElementById('npc-list');
         listContainer.innerHTML = '';
         systemData.npcs.forEach(npc => {
             let bgImage = npc['이미지링크'] ? `url('${npc['이미지링크']}')` : '#222';
-            
             let linkTarget = npc['연결화면'] ? npc['연결화면'].toString().trim() : '';
-          
             let clickAction = linkTarget === '' ? `alert('추후 공개됩니다.')` : `nav('${linkTarget}', '${npc['이름']}')`;
             
             listContainer.innerHTML += `
@@ -1532,96 +1569,6 @@ function buildNPCUI() {
         } else {
             alert("회복 반영 실패!\n(사유: " + (res ? res.msg : "서버 응답 없음") + ")");
         }
-    }
- 
-        function navUIOnly(viewId, title = '') {
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        const targetView = document.getElementById('view-' + viewId);
-        if(targetView) targetView.classList.add('active');
-
-        const backBtn = document.getElementById('btn-back');
-        const titleEl = document.getElementById('page-title');
-        const floatBtn = document.getElementById('btn-floating-guest');
-        
-        if(viewId === 'lobby') {
-            backBtn.style.display = 'none';
-            titleEl.innerText = '✦ CHARACTER LIST ✦';
-            document.getElementById('top-bar').style.display = 'flex';
-            if(floatBtn) floatBtn.style.display = 'block'; 
-        } else if(viewId === 'login') {
-            document.getElementById('top-bar').style.display = 'none';
-            if(floatBtn) floatBtn.style.display = 'none';
-        } else {
-            backBtn.style.display = 'block';
-            titleEl.innerText = title ? `✦ ${title} ✦` : '✦ SYSTEM ✦';
-            if(floatBtn) floatBtn.style.display = 'none';
-        }
-        
-        if(viewId === 'inventory') buildInventoryUI();
-        if(viewId === 'shop') updateLimitedGachaUI(); 
-    }
-
-    function openGuestList() {
-        nav('guest-list', '투숙객 명단');
-        const container = document.getElementById('guest-list-container');
-        container.innerHTML = '';
-        
-        if(!systemData.guests || systemData.guests.length === 0) {
-            container.innerHTML = '<p style="color:var(--text-sub);">명단이 아직 등록되지 않았습니다.</p>'; 
-            return;
-        }
-
-        let merged = systemData.guests.map(g => {
-            let sheetName = g['시트 기재 이름'] || g['이름'];
-            let charData = systemData.allCharacters.find(c => c.name === sheetName);
-            return {
-                name: g['이름'],
-                sheetName: sheetName,
-                img: g['프로필 사진'],
-                str: g['힘'] || 0, dex: g['민첩'] || 0, luk: g['운'] || 0,
-                link: g['프로필 링크'] || '',
-                hp: charData ? charData.hp : 0,
-                maxHp: charData ? charData.maxHp : 1
-            };
-        });
-
-        merged.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
-
-        merged.forEach(g => {
-            let hpPercent = Math.max(0, Math.min(100, (g.hp / g.maxHp) * 100));
-            let imgTag = g.img ? `<img src="${g.img}" class="guest-img">` : `<div class="guest-img">No Image</div>`;
-            
-            container.innerHTML += `
-                <div class="guest-card">
-                    ${imgTag}
-                    <h3 style="color:var(--gold-light); margin:0 0 2px 0; font-size:22px; font-family:var(--font-serif);">${g.name}</h3>
-                    <div style="font-size:11px; color:rgba(255,255,255,0.4); margin-bottom:12px;">시트 기재 이름 : ${g.sheetName}</div>
-                    
-                    <div style="font-size:12px; color:#fff; text-align:left; font-weight:bold;"> HP: ${g.hp} / ${g.maxHp}</div>
-                    <div class="guest-hp-bar"><div class="guest-hp-fill" style="width:${hpPercent}%"></div></div>
-                    
-                    <div class="guest-stats">
-                        <span>힘 ${g.str}</span>
-                        <span>민첩 ${g.dex}</span>
-                        <span>운 ${g.luk}</span>
-                    </div>
-                    
-                    <button class="btn-outline" style="width:100%; font-size:13px; padding:8px; border-color:var(--gold-main); color:var(--gold-light);" onclick="openDocModal('${g.link}')">프로필 열람</button>
-                </div>
-            `;
-        });
-    }
-
-    function openDocModal(link) {
-        if(!link || link.trim() === '') return alert('등록된 링크가 없습니다.');
-        let embedLink = link.replace('/edit', '/preview'); 
-        document.getElementById('doc-iframe').src = embedLink;
-        document.getElementById('modal-doc-overlay').style.display = 'flex';
-    }
-    
-    function closeDocModal() {
-        document.getElementById('modal-doc-overlay').style.display = 'none';
-        document.getElementById('doc-iframe').src = '';
     }
 </script>
 </body>
