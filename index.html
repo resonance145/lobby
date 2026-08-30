@@ -98,6 +98,15 @@
         .option-flex { display: flex; gap: 15px; margin-bottom: 5px; }
         .option-label { display: flex; align-items: center; gap: 6px; color: #ddd; font-size: 14px; cursor: pointer; }
         .option-label input { cursor: pointer; accent-color: var(--gold-main); }
+        
+        .guest-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; padding: 20px 0; }
+        .guest-card { background: rgba(0,0,0,0.6); border: 1px solid var(--gold-dark); border-radius: 12px; padding: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: 0.3s; }
+        .guest-card:hover { border-color: var(--gold-light); transform: translateY(-5px); }
+        .guest-img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 10px; background: #222; }
+        .guest-hp-bar { width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 4px; overflow: hidden; margin-top: 5px; margin-bottom: 12px; box-shadow: inset 0 0 5px #000; }
+        .guest-hp-fill { background: linear-gradient(90deg, #ff3333, #ff7777); height: 100%; transition: width 0.3s; }
+        .guest-stats { display: flex; justify-content: space-around; color: #ddd; font-size: 13px; margin: 10px 0; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px; border: 1px dashed var(--gold-dark); font-weight: bold; }
+        #btn-floating-guest { position: absolute; bottom: 30px; right: 30px; z-index: 50; display: none; padding: 12px 25px; border-radius: 30px; font-size: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.6); }
     </style>
 </head>
 <body>
@@ -120,7 +129,6 @@
         </div>
     </div>
 
-    <!-- 편지 확인 모달 -->
     <div id="modal-letter-overlay" class="modal-overlay">
         <div class="modal-box" style="width: 380px;">
             <div style="font-size: 36px; margin-bottom: 10px;">✉️</div>
@@ -140,7 +148,6 @@
         </div>
     </div>
 
-    <!-- 아이템 사용 모달 -->
     <div id="modal-use-overlay" class="modal-overlay">
         <div class="modal-box">
             <h3 id="modal-use-item-name" style="color: var(--gold-light); font-size: 22px; margin-top:0;">아이템 이름</h3>
@@ -166,7 +173,6 @@
         </div>
     </div>
 
-    <!-- 아이템 양도 모달 -->
     <div id="modal-transfer-overlay" class="modal-overlay">
         <div class="modal-box" style="width: 380px;">
             <h3 id="modal-transfer-item-name" style="color: var(--gold-light); font-size: 22px; margin-top:0;">아이템 이름</h3>
@@ -199,7 +205,6 @@
         </div>
     </div>
 
-    <!-- 코인 양도 모달 -->
     <div id="modal-coin-transfer-overlay" class="modal-overlay">
         <div class="modal-box" style="width: 380px;">
             <h3 style="color: var(--gold-light); font-size: 22px; margin-top:0;">코인 양도</h3>
@@ -233,7 +238,6 @@
         </div>
     </div>
 
-    <!-- 로그인 -->
     <div id="view-login" class="view active" style="justify-content: center;">
         <div class="login-box">
             <h2 style="color: var(--gold-light); font-family: var(--font-serif); margin-bottom: 30px;">ACCESS CODE</h2>
@@ -242,12 +246,10 @@
         </div>
     </div>
 
-    <!-- 메인 로비 -->
     <div id="view-lobby" class="view">
         <div class="char-list" id="npc-list"></div>
     </div>
 
-    <!-- 내 소지품 -->
     <div id="view-inventory" class="view">
         <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); flex-wrap: wrap; gap: 15px;">
             <div>
@@ -262,7 +264,6 @@
         <div class="item-grid" id="inventory-list"></div>
     </div>
 
-    <!-- 상점 -->
     <div id="view-shop" class="view">
         <div style="display: flex; align-items: flex-start; gap: 15px; background: rgba(20, 18, 24, 0.8); border: 1px solid var(--gold-dark); border-left: 5px solid var(--gold-main); border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);">
             <div style="flex:1; position:relative;">
@@ -295,7 +296,6 @@
         </div>
     </div>
 
-    <!-- 바 -->
     <div id="view-bar" class="view">
         <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--gold-dark); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
             <h3 style="color: var(--gold-light); font-size: 26px; margin-top: 0; font-family: var(--font-serif);">휴식과 회복</h3>
@@ -322,7 +322,6 @@
         </div>
     </div>
 
-    <!-- 공지사항 -->
     <div id="view-info" class="view">
         <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--gold-dark); padding: 20px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
             <div>
@@ -335,6 +334,23 @@
     </div>
 </div>
 
+    <button id="btn-floating-guest" class="btn-primary" onclick="openGuestList()">투숙객 명단</button>
+
+    <div id="view-guest-list" class="view">
+        <h3 style="color: var(--gold-light); font-size: 26px; margin-top: 0; font-family: var(--font-serif); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">투숙객 명단</h3>
+        <div id="guest-list-container" class="guest-grid"></div>
+    </div>
+
+    <div id="modal-doc-overlay" class="modal-overlay">
+        <div class="modal-box" style="width: 90%; max-width: 800px; height: 80vh; padding: 0; display: flex; flex-direction: column; overflow: hidden;">
+            <div style="background: var(--panel-bg); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold-dark);">
+                <span style="color: var(--gold-light); font-family: var(--font-serif); font-size: 18px;">PROFILE DATA</span>
+                <button class="btn-cancel" style="padding: 5px 15px; border-radius: 4px;" onclick="closeDocModal()">닫기</button>
+            </div>
+            <iframe id="doc-iframe" style="width: 100%; flex: 1; border: none; background: #fff;"></iframe>
+        </div>
+    </div>
+    
 <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbzEO9cbWDMh6I1cf85nWjOn1psqYohENUWihxbmVGs26yTeSliKYHHo7ljJl0aW3D4L/exec"; 
 
@@ -1505,6 +1521,96 @@ function buildNPCUI() {
         } else {
             alert("회복 반영 실패!\n(사유: " + (res ? res.msg : "서버 응답 없음") + ")");
         }
+    }
+ 
+        function navUIOnly(viewId, title = '') {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        const targetView = document.getElementById('view-' + viewId);
+        if(targetView) targetView.classList.add('active');
+
+        const backBtn = document.getElementById('btn-back');
+        const titleEl = document.getElementById('page-title');
+        const floatBtn = document.getElementById('btn-floating-guest');
+        
+        if(viewId === 'lobby') {
+            backBtn.style.display = 'none';
+            titleEl.innerText = '✦ CHARACTER LIST ✦';
+            document.getElementById('top-bar').style.display = 'flex';
+            if(floatBtn) floatBtn.style.display = 'block'; 
+        } else if(viewId === 'login') {
+            document.getElementById('top-bar').style.display = 'none';
+            if(floatBtn) floatBtn.style.display = 'none';
+        } else {
+            backBtn.style.display = 'block';
+            titleEl.innerText = title ? `✦ ${title} ✦` : '✦ SYSTEM ✦';
+            if(floatBtn) floatBtn.style.display = 'none';
+        }
+        
+        if(viewId === 'inventory') buildInventoryUI();
+        if(viewId === 'shop') updateLimitedGachaUI(); 
+    }
+
+    function openGuestList() {
+        nav('guest-list', '투숙객 명단');
+        const container = document.getElementById('guest-list-container');
+        container.innerHTML = '';
+        
+        if(!systemData.guests || systemData.guests.length === 0) {
+            container.innerHTML = '<p style="color:var(--text-sub);">명단이 아직 등록되지 않았습니다.</p>'; 
+            return;
+        }
+
+        let merged = systemData.guests.map(g => {
+            let sheetName = g['시트 기재 이름'] || g['이름'];
+            let charData = systemData.allCharacters.find(c => c.name === sheetName);
+            return {
+                name: g['이름'],
+                sheetName: sheetName,
+                img: g['프로필 사진'],
+                str: g['힘'] || 0, dex: g['민첩'] || 0, luk: g['운'] || 0,
+                link: g['프로필 링크'] || '',
+                hp: charData ? charData.hp : 0,
+                maxHp: charData ? charData.maxHp : 1
+            };
+        });
+
+        merged.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+
+        merged.forEach(g => {
+            let hpPercent = Math.max(0, Math.min(100, (g.hp / g.maxHp) * 100));
+            let imgTag = g.img ? `<img src="${g.img}" class="guest-img">` : `<div class="guest-img">No Image</div>`;
+            
+            container.innerHTML += `
+                <div class="guest-card">
+                    ${imgTag}
+                    <h3 style="color:var(--gold-light); margin:0 0 2px 0; font-size:22px; font-family:var(--font-serif);">${g.name}</h3>
+                    <div style="font-size:11px; color:rgba(255,255,255,0.4); margin-bottom:12px;">시트 기재 이름 : ${g.sheetName}</div>
+                    
+                    <div style="font-size:12px; color:#fff; text-align:left; font-weight:bold;"> HP: ${g.hp} / ${g.maxHp}</div>
+                    <div class="guest-hp-bar"><div class="guest-hp-fill" style="width:${hpPercent}%"></div></div>
+                    
+                    <div class="guest-stats">
+                        <span>힘 ${g.str}</span>
+                        <span>민첩 ${g.dex}</span>
+                        <span>운 ${g.luk}</span>
+                    </div>
+                    
+                    <button class="btn-outline" style="width:100%; font-size:13px; padding:8px; border-color:var(--gold-main); color:var(--gold-light);" onclick="openDocModal('${g.link}')">프로필 열람</button>
+                </div>
+            `;
+        });
+    }
+
+    function openDocModal(link) {
+        if(!link || link.trim() === '') return alert('등록된 링크가 없습니다.');
+        let embedLink = link.replace('/edit', '/preview'); 
+        document.getElementById('doc-iframe').src = embedLink;
+        document.getElementById('modal-doc-overlay').style.display = 'flex';
+    }
+    
+    function closeDocModal() {
+        document.getElementById('modal-doc-overlay').style.display = 'none';
+        document.getElementById('doc-iframe').src = '';
     }
 </script>
 </body>
