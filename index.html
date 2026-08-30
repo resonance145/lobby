@@ -53,8 +53,10 @@
         .guest-card:hover { border-color: var(--gold-light); transform: translateY(-5px); }
         .guest-img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 10px; background: #222; }
         .guest-hp-bar { width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 4px; overflow: hidden; margin-top: 5px; margin-bottom: 12px; box-shadow: inset 0 0 5px #000; }
-        .guest-hp-fill { background: linear-gradient(90deg, #ff3333, #ff7777); height: 100%; transition: width 0.3s; }
+        .guest-hp-fill { height: 100%; transition: width 0.3s, background 0.3s; }
         .guest-stats { display: flex; justify-content: space-around; color: #ddd; font-size: 13px; margin: 10px 0 15px 0; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px; border: 1px dashed var(--gold-dark); font-weight: bold; }
+        #btn-floating-guest { position: absolute; bottom: 30px; right: 30px; z-index: 50; display: none; padding: 10px 22px; border-radius: 30px; font-size: 15px; font-weight: bold; width: auto !important; border: 1px solid var(--gold-main); background: rgba(0,0,0,0.8); color: var(--gold-light); cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.6); transition: 0.2s; }
+        #btn-floating-guest:hover { background: var(--gold-dark); color: #fff; transform: scale(1.05); }
 
         .char-list { display: flex; gap: 30px; justify-content: center; margin-top: 50px; flex-wrap: wrap;}
         .char-card-v2 { width: 260px; height: 380px; background-size: cover; background-position: center; border-radius: 12px; cursor: pointer; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; transition: 0.3s; position: relative; border: 1px solid var(--gold-dark); box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); }
@@ -115,11 +117,10 @@
         </div>
         <div class="resources">
             <div class="resource-item">👤 <span id="ui-name">이름</span></div>
-            <div class="resource-item">❤️ HP: <span id="ui-hp">0</span> / <span id="ui-maxhp">0</span> 
+            <div class="resource-item"><span style="color:var(--gold-main); font-weight:bold;">HP</span>&nbsp;<span id="ui-hp">0</span> / <span id="ui-maxhp">0</span> 
                 <span id="ui-status" style="display:none; padding:2px 8px; border-radius:12px; margin-left:8px; font-weight:bold; font-size:12px; color:#fff;"></span>
             </div>
             <div class="resource-item">💰 <span id="ui-coins">0</span> 코인</div>
-            <div class="resource-item inv-btn" onclick="openGuestList()" style="padding: 5px 20px; font-weight: bold; border-color: var(--gold-main); color: var(--gold-light);">투숙객 명단</div>
             <div class="resource-item inv-btn" onclick="openInventoryView()">소지품 <span id="ui-inv-alert" class="alert-badge" style="display:none;">!</span></div>
         </div>
     </div>
@@ -322,6 +323,9 @@
         <div id="notice-list" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;"></div>
     </div>
 
+    <!-- ⭐ 우측 하단 플로팅 버튼 (로비에서만 뜹니다) -->
+    <button id="btn-floating-guest" onclick="openGuestList()">투숙객 명단</button>
+
     <div id="view-guest-list" class="view">
         <h3 style="color: var(--gold-light); font-size: 26px; margin-top: 0; font-family: var(--font-serif); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">투숙객 명단</h3>
         <div id="guest-list-container" class="guest-grid"></div>
@@ -329,7 +333,7 @@
 
     <div id="view-doc" class="view" style="padding: 0; flex-direction: column;">
         <div style="background: rgba(0,0,0,0.5); padding: 15px 30px; border-bottom: 1px solid var(--gold-dark); display: flex; justify-content: space-between; align-items: center;">
-            <span style="color: var(--gold-light); font-family: var(--font-serif); font-size: 18px; font-weight: bold;">PROFILE DATA</span>
+            <span style="color: var(--gold-light); font-family: var(--font-serif); font-size: 18px; font-weight: bold;">📄 PROFILE DATA</span>
             <a id="doc-new-window" href="#" target="_blank" style="color: var(--text-sub); font-size: 13px; text-decoration: none; border: 1px solid var(--text-sub); padding: 4px 10px; border-radius: 4px;">새 창으로 열기 ↗</a>
         </div>
         <iframe id="doc-iframe" style="width: 100%; flex: 1; border: none; background: #fff; min-height: 500px;"></iframe>
@@ -428,6 +432,7 @@
 
         const backBtn = document.getElementById('btn-back');
         const titleEl = document.getElementById('page-title');
+        const floatBtn = document.getElementById('btn-floating-guest');
         
         backBtn.onclick = () => nav('lobby'); 
         backBtn.innerText = '◀ 로비로';
@@ -436,11 +441,14 @@
             backBtn.style.display = 'none';
             titleEl.innerText = '✦ CHARACTER LIST ✦';
             document.getElementById('top-bar').style.display = 'flex';
+            if(floatBtn) floatBtn.style.display = 'block';
         } else if(viewId === 'login') {
             document.getElementById('top-bar').style.display = 'none';
+            if(floatBtn) floatBtn.style.display = 'none';
         } else {
             backBtn.style.display = 'block';
             titleEl.innerText = title ? `✦ ${title} ✦` : '✦ SYSTEM ✦';
+            if(floatBtn) floatBtn.style.display = 'none';
             
             if (viewId === 'doc') {
                 backBtn.innerText = '◀ 명단으로';
@@ -485,6 +493,16 @@
 
         merged.forEach(g => {
             let hpPercent = Math.max(0, Math.min(100, (g.hp / g.maxHp) * 100));
+            
+            let hpColor = '';
+            if (hpPercent >= 50) {
+                hpColor = 'linear-gradient(90deg, #4caf50, #81c784)'; // 초록
+            } else if (hpPercent >= 25) {
+                hpColor = 'linear-gradient(90deg, #ffc107, #ffd54f)'; // 노랑
+            } else {
+                hpColor = 'linear-gradient(90deg, #f44336, #e57373)'; // 빨강
+            }
+
             let imgTag = g.img ? `<img src="${g.img}" class="guest-img">` : `<div class="guest-img" style="display:flex; justify-content:center; align-items:center; color:#555;">No Image</div>`;
             
             container.innerHTML += `
@@ -493,16 +511,22 @@
                     <h3 style="color:var(--gold-light); margin:0 0 2px 0; font-size:22px; font-family:var(--font-serif);">${g.name}</h3>
                     <div style="font-size:11px; color:rgba(255,255,255,0.4); margin-bottom:12px;">시트 기재 이름 : ${g.sheetName}</div>
                     
-                    <div style="font-size:12px; color:#fff; text-align:left; font-weight:bold;">❤️ HP: ${g.hp} / ${g.maxHp}</div>
-                    <div class="guest-hp-bar"><div class="guest-hp-fill" style="width:${hpPercent}%"></div></div>
-                    
-                    <div class="guest-stats">
-                        <span>💪 ${g.str}</span>
-                        <span>⚡ ${g.dex}</span>
-                        <span>🍀 ${g.luk}</span>
+                    <div style="font-size:12px; color:#fff; text-align:left; font-weight:bold; margin-bottom:5px;">
+                        <span style="color:var(--gold-main);">HP</span> ${g.hp} / ${g.maxHp}
+                    </div>
+                    <div class="guest-hp-bar">
+                        <div class="guest-hp-fill" style="width:${hpPercent}%; background:${hpColor};"></div>
                     </div>
                     
-                    <button class="btn-outline" style="width:100%; font-size:13px; padding:8px; margin-top:auto; border-color:var(--gold-main); color:var(--gold-light);" onclick="openDocView('${g.link}')">프로필 열람</button>
+                    <div class="guest-stats">
+                        <span><span style="color:var(--gold-main);">힘</span> ${g.str}</span>
+                        <span><span style="color:var(--gold-main);">민첩</span> ${g.dex}</span>
+                        <span><span style="color:var(--gold-main);">운</span> ${g.luk}</span>
+                    </div>
+                    
+                    <div style="text-align: right; margin-top: auto; padding-top: 5px;">
+                        <button class="btn-outline" style="font-size:11px; padding:5px 12px; border-color:var(--gold-main); color:var(--gold-light); border-radius: 20px;" onclick="openDocView('${g.link}')">프로필 열람</button>
+                    </div>
                 </div>
             `;
         });
