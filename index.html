@@ -135,7 +135,6 @@
         </div>
     </div>
     
-    <!-- 모달 오버레이들 -->
     <div id="modal-letter-overlay" class="modal-overlay">
         <div class="modal-box" style="width: 380px;">
             <div style="font-size: 36px; margin-bottom: 10px;">✉️</div>
@@ -237,7 +236,6 @@
         </div>
     </div>
 
-    <!-- 화면 뷰들 -->
     <div id="view-login" class="view active" style="justify-content: center;">
         <div class="login-box">
             <h2 style="color: var(--gold-light); font-family: var(--font-serif); margin-bottom: 30px;">ACCESS CODE</h2>
@@ -333,7 +331,6 @@
         <div id="notice-list" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;"></div>
     </div>
 
-    <!-- 우측 하단 플로팅 버튼 (로비에서만 나타남) -->
     <button id="btn-floating-guest" onclick="openGuestList()">투숙객 명단</button>
 
     <div id="view-guest-list" class="view">
@@ -359,7 +356,6 @@
             <div class="profile-right-panel" style="flex:1; display:flex; flex-direction:column; gap:20px; height:100%; min-width:0;">
                 <div class="right-header" style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--gold-dark); padding-bottom:15px;">
                     <h2 id="doc-ui-name" style="font-family:var(--font-serif); color:var(--gold-light); margin:0; font-size:32px;">Name</h2>
-                    <a id="doc-new-window" href="#" target="_blank" style="color:var(--gold-light); font-size:13px; text-decoration:none; border:1px solid var(--gold-dark); padding:6px 12px; border-radius:4px;">새 창으로 열기 ↗</a>
                 </div>
 
                 <div id="profile-doc-container" class="community-theme"></div>
@@ -375,6 +371,19 @@
 
     let playerData = null;
     let systemData = null; 
+
+    // 입력한 이름(시트 기재 이름 등)을 실제 캐릭터 시트의 이름으로 변환하는 함수
+    function resolveCharacterName(inputName) {
+        if (!systemData || !systemData.guests) return inputName;
+        // 1. '시트 기재 이름'으로 검색
+        let match1 = systemData.guests.find(g => g['시트 기재 이름'] === inputName);
+        if (match1 && match1['이름']) return match1['이름'];
+        // 2. '이름'으로 검색
+        let match2 = systemData.guests.find(g => g['이름'] === inputName);
+        if (match2 && match2['이름']) return match2['이름'];
+        
+        return inputName;
+    }
 
     function isColorful(colorStr) {
         if (!colorStr) return false;
@@ -522,7 +531,8 @@
 
         let merged = systemData.guests.map(g => {
             let sheetName = g['시트 기재 이름'] || g['이름'];
-            let charData = systemData.allCharacters.find(c => c.name === sheetName);
+            // 실제 이름 기반으로 캐릭터 데이터를 매칭
+            let charData = systemData.allCharacters.find(c => c.name === g['이름']);
             return {
                 name: g['이름'],
                 sheetName: sheetName,
@@ -603,7 +613,6 @@
             imgEl.style.display = 'none'; noImgEl.style.display = 'block';
         }
 
-        document.getElementById('doc-new-window').href = link;
         const container = document.getElementById('profile-doc-container');
         container.innerHTML = "<p style='text-align:center; color: var(--text-sub); margin-top:50px;'>문서를 불러오는 중...</p>";
         nav('doc', '프로필 열람');
@@ -971,17 +980,20 @@
     }
 
     async function confirmCoinTransfer() {
-        const targetName = document.getElementById('ct-target-name').value.trim();
+        const rawTargetName = document.getElementById('ct-target-name').value.trim();
         const amountStr = document.getElementById('ct-amount').value.trim();
         const amount = parseInt(amountStr);
 
-        if (!targetName) return alert("양도받을 캐릭터의 이름을 입력해주세요.");
+        if (!rawTargetName) return alert("양도받을 캐릭터의 이름을 입력해주세요.");
+        
+        const targetName = resolveCharacterName(rawTargetName);
+
         if (targetName === playerData.name) return alert("자기 자신에게는 양도할 수 없습니다.");
         if (isNaN(amount) || amount <= 0) return alert("정상적인 금액을 입력해주세요.");
         if (playerData.coins < amount) return alert("소지한 코인이 부족합니다.");
 
         const isTargetValid = systemData.allCharacters.some(c => c.name === targetName);
-        if (!isTargetValid) return alert(`'${targetName}' 이라는 이름을 가진 캐릭터가 구글 시트에 없습니다.\n띄어쓰기나 오타를 확인해 주세요.`);
+        if (!isTargetValid) return alert(`입력하신 이름의 캐릭터가 구글 시트에 없습니다.\n띄어쓰기나 오타를 확인해 주세요.`);
 
         const isAnonymous = document.querySelector('input[name="ct-sender"]:checked').value === "anonymous";
         const isMsgEnabled = document.querySelector('input[name="ct-msg-toggle"]:checked').value === "write";
@@ -1230,12 +1242,15 @@
     function closeTransferModal() { document.getElementById('modal-transfer-overlay').style.display = 'none'; }
     
     document.getElementById('btn-confirm-transfer').onclick = async function() {
-        const targetName = document.getElementById('transfer-target-name').value.trim();
-        if (!targetName) return alert("양도받을 캐릭터의 이름을 입력해주세요.");
+        const rawTargetName = document.getElementById('transfer-target-name').value.trim();
+        if (!rawTargetName) return alert("양도받을 캐릭터의 이름을 입력해주세요.");
+        
+        const targetName = resolveCharacterName(rawTargetName);
+        
         if (targetName === playerData.name) return alert("자기 자신에게는 양도할 수 없습니다.");
 
         const isTargetValid = systemData.allCharacters.some(c => c.name === targetName);
-        if (!isTargetValid) return alert(`'${targetName}' 이라는 이름을 가진 캐릭터가 구글 시트에 없습니다.\n띄어쓰기나 오타를 확인해 주세요.`);
+        if (!isTargetValid) return alert(`입력하신 이름의 캐릭터가 구글 시트에 없습니다.\n띄어쓰기나 오타를 확인해 주세요.`);
 
         const isAnonymous = document.querySelector('input[name="ts-sender"]:checked').value === "anonymous";
         const isMsgEnabled = document.querySelector('input[name="ts-msg-toggle"]:checked').value === "write";
@@ -1695,13 +1710,15 @@
         const btnHeal = document.getElementById('btn-heal-execute');
         if(btnHeal && btnHeal.disabled) return;
         
-        let names = [];
+        let rawNames = [];
         for (let i = 1; i <= 3; i++) {
             let val = document.getElementById(`target-${i}`).value.trim();
-            if (val) names.push(val);
+            if (val) rawNames.push(val);
         }
-        if (names.length === 0) return alert("대상의 이름을 1명 이상 입력해주세요.");
+        if (rawNames.length === 0) return alert("대상의 이름을 1명 이상 입력해주세요.");
 
+        let names = rawNames.map(n => resolveCharacterName(n));
+        
         let logResult = "";
         let roll = (sides) => Math.floor(Math.random() * sides) + 1;
         const getCharInfo = (targetName) => systemData.allCharacters.find(c => c.name === targetName);
